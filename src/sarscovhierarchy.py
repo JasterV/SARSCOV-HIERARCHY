@@ -10,12 +10,19 @@ def read_csv(filepath):
         reader = DictReader(csv_file, delimiter=',')
         return list(reader)
 
+
 def read_fasta(filepath):
-    """Reads a fasta file
-    TODO: Clear the data
+    """Reads a fasta file and returns a Map where the key are the accessions
+    and the values are the RNA sequences
     """
+    data = dict()
     with open(filepath, 'r') as fasta:
-        return fasta.read().split('>')
+        sequences = fasta.read().strip().split('>')[1:]
+        for seq in sequences:
+            lines = seq.split('\n')
+            seq_id = lines[0].split('|')[0].strip()
+            data[seq_id] = ''.join(lines[1:])
+    return data
 
 
 if __name__ == '__main__':
