@@ -1,28 +1,6 @@
 from sys import argv, exit
-from csv import DictReader
 from os.path import join
-
-
-def read_csv(filepath):
-    """Reads a csv file and returns a list of Ordered Maps
-    """
-    with open(filepath, 'r') as csv_file:
-        reader = DictReader(csv_file, delimiter=',')
-        return list(reader)
-
-
-def read_fasta(filepath):
-    """Reads a fasta file and returns a Map where the key are the accessions
-    and the values are the RNA sequences
-    """
-    data = dict()
-    with open(filepath, 'r') as fasta:
-        sequences = fasta.read().strip().split('>')[1:]
-        for seq in sequences:
-            lines = seq.split('\n')
-            seq_id = lines[0].split('|')[0].strip()
-            data[seq_id] = ''.join(lines[1:])
-    return data
+from data_reader import read_csv, read_fasta
 
 
 if __name__ == '__main__':
