@@ -8,8 +8,9 @@ if __name__ == '__main__':
         print("python sarscovhierarchy.py <directory>")
         exit()
     data_dir = argv[1]
+
     csv_path = join(data_dir, "sequences.csv")
     fasta_path = join(data_dir, "sequences.fasta")
-    # Read files
+
     fasta_data = read_fasta(fasta_path)
     csv_data = read_csv(csv_path)

@@ -13,7 +13,7 @@ def get_rna(s):
 
 
 def read_fasta(filepath):
-    """Reads a fasta file and returns a Map where the key are the accessions
+    """Reads a fasta file and returns a dict where the keys are the accessions
     and the values are the RNA sequences
     """
     data = dict()
