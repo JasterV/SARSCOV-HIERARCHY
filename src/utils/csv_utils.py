@@ -13,10 +13,10 @@ def read_csv(file_path: str) -> List:
 
 # TODO: modify sorted, only if it is necessary.
 
-def get_average_row(csv_data: List[Dict], values: tuple) -> int:
+def get_average_row(values : tuple) -> int:
     sorted_values = sorted(values, key=lambda x: x.length)
     average_value = sorted_values[len(values) // 2]
-    return csv_data[average_value.row]
+    return average_value.row
 
 
 def filter_country_average_length(data: List[Dict]) -> List[Dict]:
@@ -28,8 +28,7 @@ def filter_country_average_length(data: List[Dict]) -> List[Dict]:
     country_dict = dict()
     named_tuple = namedtuple("tuple", "row length")
     for row, sample in enumerate(data):
-        country, length = sample.get(
-            'Geo_Location', 'Unknown'), sample['Length']
+        country, length = sample.get('Geo_Location', 'Unknown'), sample['Length']
         country_dict.setdefault(country, []).append(named_tuple(row, length))
-    return [get_average_row(data, country_dict[country])
-            for country in country_dict]
+    average_rows = [get_average_row(country_dict[country]) for country in country_dict]    
+    return [data[row] for row in average_rows]
