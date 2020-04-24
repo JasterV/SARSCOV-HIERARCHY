@@ -32,7 +32,7 @@ def country_dict(csv_data: List[Dict]) -> List[Union[dict, List[dict]]]:
                          for x in countries}
     average_samples = {c: countries_ordered[c][len(countries_ordered[c]) // 2]
                        for c in countries_ordered}
-    target_samples = [csv_data[x.id] for x in average_samples]
+    target_samples = [csv_data[x.id] for x in average_samples.values()]
     return target_samples
 
 
