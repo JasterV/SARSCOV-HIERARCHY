@@ -1,7 +1,7 @@
 from os.path import join
 from sys import argv, exit
-from csv_utils import read_csv, country_dict, recur_country_dict
-from fasta_utils import read_fasta
+from src.utils.csv_utils import read_csv, country_dict
+from src.utils.fasta_utils import read_fasta
 
 if __name__ == '__main__':
     if len(argv) != 2:
@@ -15,6 +15,4 @@ if __name__ == '__main__':
     fasta_data = read_fasta(fasta_path)
     csv_data = read_csv(csv_path)
 
-    medium = country_dict(csv_data)
-    medium2 = recur_country_dict(csv_data)
-    print(medium2)
+    ctry_dict = country_dict(csv_data)
