@@ -49,8 +49,7 @@ def filter_country_average_length(data: List[Dict]) -> List[Dict]:
         # Creem les llistes de tuples id-length
         rna_id, country, length = sample['Accession'], sample['Geo_Location'], sample['Length']
         country_dict.setdefault(country, []).append((rna_id, length))
-    # Transformem el diccionari a un diccionari country - average_id
-    new_dict = {country: get_average_id(country_dict[country])
-                for country in country_dict}
+    # Transformem el diccionari a una llista de average_ids
+    average_ids = [get_average_id(country_dict[country]) for country in country_dict]    
     # Filtrem la llista de input
-    return list(filter(lambda sample: sample['Accession'] in new_dict.values(), data))
+    return list(filter(lambda sample: sample['Accession'] in average_ids, data))
