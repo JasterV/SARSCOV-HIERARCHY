@@ -1,6 +1,6 @@
 from collections import namedtuple
 from csv import DictReader
-from typing import List, Dict
+from typing import List, Dict, Union
 
 
 def read_csv(file_path: str) -> List:
@@ -13,13 +13,13 @@ def read_csv(file_path: str) -> List:
 
 # TODO: modify sorted, only if it is necessary.
 
-def get_average_row(csv_data: List[Dict], values: tuple) -> int:
+def get_average_row(csv_data: List[Dict], values: tuple) -> Union[dict, List[dict]]:
     sorted_values = sorted(values, key=lambda x: x.length)
     average_value = sorted_values[len(values) // 2]
     return csv_data[average_value.row]
 
 
-def filter_country_average_length(data: List[Dict]) -> List[int]:
+def filter_country_average_length(data: List[Dict]) -> List[Union[dict, List[dict]]]:
     """
     calculate the average length of regions
     :param data: A csv with the regions
