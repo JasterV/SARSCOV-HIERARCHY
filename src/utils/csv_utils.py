@@ -9,8 +9,8 @@ def read_csv(file_path: str) -> List:
         reader = DictReader(csv_file, delimiter=',')
         return list(reader)
 
-# TODO: modify sorted, only if it is necessary.
 
+# TODO: modify sorted, only if it is necessary.
 
 def country_dict(csv_data: List[Dict]) -> Dict:
     """
