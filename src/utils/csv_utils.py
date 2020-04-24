@@ -29,8 +29,9 @@ def country_dict(csv_data: List[Dict]) -> Dict:
             countries[location] = [sample(id_sample, length)]
         else:
             countries[location].append(sample(id_sample, length))
-    countries_ordered = {countries[x]: sorted(countries[x],
-                                              key=lambda s: s.length)
+    countries_ordered = {x: sorted(countries[x],
+                                   key=lambda s: s.length)
                          for x in countries}
-    target_samples = {c: countries_ordered[c][len(countries_ordered[c]) // 2] for c in countries}
+    target_samples = {c: countries_ordered[c][len(countries_ordered[c]) // 2]
+                      for c in countries_ordered}
     return target_samples
