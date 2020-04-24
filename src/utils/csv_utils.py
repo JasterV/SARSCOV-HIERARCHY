@@ -1,3 +1,4 @@
+from collections import namedtuple
 from csv import DictReader
 from typing import List, Dict
 
@@ -19,10 +20,17 @@ def country_dict(csv_data: List[Dict]) -> Dict:
     :return: Dictionary with the average length
     """
     countries = dict()
+    sample = namedtuple("sample", "id length")
     for test in csv_data:
-        location = test.get("Geo_Location", " ")
+        id_sample, location, length = (test.get("Accession", " "),
+                                       test.get("Geo_Location", " "),
+                                       test.get("Length", ""))
         if location not in countries:
-            numbers = filter(lambda x: x["Geo_Location"] == location, csv_data)
-            countries[location] = sorted(
-                list(x.get("Length") for x in numbers))
-    return {c: countries[c][len(countries[c]) // 2] for c in countries}
+            countries[location] = [sample(id_sample, length)]
+        else:
+            countries[location].append(sample(id_sample, length))
+    countries_ordered = {countries[x]: sorted(countries[x],
+                                              key=lambda s: s.length)
+                         for x in countries}
+    target_samples = {c: countries_ordered[c][len(countries_ordered[c]) // 2] for c in countries}
+    return target_samples
