@@ -29,29 +29,27 @@ def country_dict(csv_data: List[Dict]) -> Dict:
             countries[location] = [sample(id_sample, length)]
         else:
             countries[location].append(sample(id_sample, length))
-    countries_ordered = {x: sorted(countries[x],
-                                   key=lambda s: s.length)
-                         for x in countries}
-    target_samples = {c: countries_ordered[c][len(countries_ordered[c]) // 2]
-                      for c in countries_ordered}
+    countries_ordered = {
+        x: sorted(countries[x], key=lambda s: s.length) for x in countries}
+    target_samples = {c: countries_ordered[c][len(
+        countries_ordered[c]) // 2] for c in countries_ordered}
     return target_samples
 
 
-def map_average(country_dict: dict) -> Dict:
-    new_dict = dict()
-    for country, value in country_dict.items():
-        sorted_samples = sorted(value, key=lambda x: x[1])
-        average = sorted_samples[len(sorted_samples) // 2]
-        target_id = average[0]
-        new_dict[country] = target_id
-    return new_dict
-
+def get_average_id(values):
+    sorted_values = sorted(values, key=lambda x: x[1])
+    average_value = sorted_values[len(values) // 2]
+    sample_id = average_value[0]
+    return sample_id
 
 def filter_country_average_length(data: List[Dict]) -> List[Dict]:
     country_dict = dict()
     for sample in data:
+        # Creem les llistes de tuples id-length
         rna_id, country, length = sample['Accession'], sample['Geo_Location'], sample['Length']
         country_dict.setdefault(country, []).append((rna_id, length))
-    filtered_dict = map_average(country_dict)
-    return list(filter(lambda sample: sample['Accession'] in filtered_dict.values(), data))
-
+    # Transformem el diccionari a un diccionari country - average_id
+    new_dict = {country: get_average_id(country_dict[country]) 
+                              for country in country_dict}
+    # Filtrem la llista de input
+    return list(filter(lambda sample: sample['Accession'] in new_dict.values(), data))
