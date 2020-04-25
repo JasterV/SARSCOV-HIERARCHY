@@ -9,26 +9,26 @@ class CSV:
         """Arguments: arg -> CSV filepath or information
         """
         if isinstance(arg, str):
-            self.__csv_list = self.__read_csv(arg)
+            self.__table = self.__read_csv(arg)
         elif isinstance(arg, list):
-            self.__csv_list = arg
+            self.__table = arg
         else:
             raise TypeError("Invalid Argument")
 
     def __getitem__(self, index):
-        return self.__csv_list[index]
+        return self.__table[index]
 
     def __len__(self):
-        return len(self.__csv_list)
+        return len(self.__table)
 
     def __iter__(self):
-        for row in self.__csv_list:
+        for row in self.__table:
             yield row
 
     def __str__(self):
         prettyTable = PrettyTable(['Accession', 'Release_Date', 'Species', 'Length',
                                    'Geo_Location', 'Host', 'Isolation_Source', 'Collection_Date'])
-        for row in self.__csv_list:
+        for row in self:
             prettyTable.add_row(row.values())
         return str(prettyTable)
 
@@ -38,7 +38,7 @@ class CSV:
         """
         country_dict = dict()
         named_sample = namedtuple("data_info", "row length")
-        for row, sample in enumerate(self.__csv_list):
+        for row, sample in enumerate(self.__table):
             country, length = sample.get(
                 'Geo_Location', 'Unknown'), sample['Length']
             country_dict.setdefault(country, []).append(
@@ -61,4 +61,4 @@ class CSV:
     def __get_average_row(self, values: tuple) -> Union[dict, List[dict]]:
         sorted_values = sorted(values, key=lambda x: x.length)
         average_value = sorted_values[len(values) // 2]
-        return self.__csv_list[average_value.row]
+        return self.__table[average_value.row]
