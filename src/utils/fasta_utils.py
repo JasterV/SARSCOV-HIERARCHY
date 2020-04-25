@@ -3,7 +3,7 @@ from typing import Tuple, Dict
 
 class Fasta:
     def __init__(self, file_path):
-        self.__data = self.__read_fasta(file_path)
+        self.__data = self._read_fasta(file_path)
 
     def get_rna(self, rna_id):
         return self.__data[rna_id]
@@ -18,7 +18,7 @@ class Fasta:
                 matches += 1
         return matches / max(len1, len2)
 
-    def __read_fasta(self, file_path: str) -> Dict[str, str]:
+    def _read_fasta(self, file_path: str) -> Dict[str, str]:
         """Reads a fasta file and returns a dict where the keys are the accessions
         and the values are the RNA sequences
         """
@@ -26,11 +26,12 @@ class Fasta:
         with open(file_path, 'r') as fasta:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
-                rna_id, rna = self.__get_rna(seq)
+                rna_id, rna = self._get_rna(seq)
                 data[rna_id] = rna
         return data
 
-    def __get_rna(self, genome_info_str: str) -> Tuple[str, str]:
+    @staticmethod
+    def _get_rna(genome_info_str: str) -> Tuple[str, str]:
         """Get the header and the RNA from a String
         Argument: A String that contains info about the genome
         Return: An Id-value tuple
