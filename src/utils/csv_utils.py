@@ -1,24 +1,60 @@
 from collections import namedtuple
 from csv import DictReader
-from typing import List, Union
+from typing import List, Union, Dict
+from prettytable import PrettyTable
 
 
 class CSV:
-    def __init__(self, path_file=None, table=None):
-        if path_file is not None:
-            self.__csv_list = self.__read_csv(path_file)
-        elif table is not None:
-            self.__csv_list = table
+    def __init__(self, arg: Union[str, List[Dict]]):
+        """Arguments: arg -> CSV filepath or information
+        """
+        if isinstance(arg, str):
+            self.__csv_list = self.__read_csv(arg)
+        elif isinstance(arg, list):
+            self.__csv_list = arg
         else:
-            raise TypeError("Invalid arguments")
+            raise TypeError("Invalid Argument")
+
+    def __getitem__(self, index):
+        return self.__csv_list[index]
+
+    def __len__(self):
+        return len(self.__csv_list)
+
+    def __iter__(self):
+        for row in self.__csv_list:
+            yield row
+
+    def __str__(self):
+        prettyTable = PrettyTable(['Accession', 'Release_Date', 'Species', 'Length',
+                                   'Geo_Location', 'Host', 'Isolation_Source', 'Collection_Date'])
+        for row in self.__csv_list:
+            prettyTable.add_row(row.values())
+        return str(prettyTable)
+
+    def filter(self):
+        """Filters the csv by country for average length's
+        :return: CSV
+        """
+        country_dict = dict()
+        named_sample = namedtuple("data_info", "row length")
+        for row, sample in enumerate(self.__csv_list):
+            country, length = sample.get(
+                'Geo_Location', 'Unknown'), sample['Length']
+            country_dict.setdefault(country, []).append(
+                named_sample(row, length))
+        filtered_data = [self.__get_average_row(country_dict[country])
+                         for country in country_dict]
+        return CSV(filtered_data)
 
     @staticmethod
-    def __read_csv(file_path: str) -> List:
-        """Reads a csv file and returns a list of Ordered Maps
+    def __read_csv(file_path: str) -> List[Dict]:
+        """Reads a csv file
+        :return: List[Dict]
         """
         with open(file_path, 'r') as csv_file:
             reader = DictReader(csv_file, delimiter=',')
-            return list(reader)
+            return list(map(lambda row: dict(row), reader))
 
     # TODO: modify sorted, only if it is necessary.
 
@@ -26,18 +62,3 @@ class CSV:
         sorted_values = sorted(values, key=lambda x: x.length)
         average_value = sorted_values[len(values) // 2]
         return self.__csv_list[average_value.row]
-
-    def filter(self):
-        """
-        calculate the average length of regions
-        :return: csv instance with the average length on region
-        """
-        country_dict = dict()
-        named_sample = namedtuple("data_info", "row length")
-        for row, sample in enumerate(self.__csv_list):
-            country, length = sample.get(
-                'Geo_Location', 'Unknown'), sample['Length']
-            country_dict.setdefault(country, []).append(named_sample(row, length))
-        filtered_data = [self.__get_average_row(country_dict[country])
-                         for country in country_dict]
-        return CSV(table=filtered_data)

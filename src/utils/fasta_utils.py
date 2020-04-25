@@ -5,11 +5,15 @@ class Fasta:
     def __init__(self, file_path):
         self.__data = self._read_fasta(file_path)
 
-    def get_rna(self, rna_id):
+    def __getitem__(self, rna_id):
         return self.__data[rna_id]
 
     def compare_rna(self, id1, id2):
-        rna1, rna2 = self.get_rna(id1), self.get_rna(id2)
+        """Compares to rna codes
+        Arguments: id1, id2 -> String
+        return: float
+        """
+        rna1, rna2 = self[id1], self[id2]
         len1, len2 = len(rna1), len(rna2)
         matches = 0
         for i in range(min(len1, len2)):
