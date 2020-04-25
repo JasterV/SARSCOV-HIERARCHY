@@ -4,7 +4,7 @@ from typing import List, Union, Dict
 from prettytable import PrettyTable
 
 
-class CSV:
+class CsvTable:
     def __init__(self, arg: Union[str, List[Dict]]):
         """Arguments: arg -> CSV filepath or information
         """
@@ -16,6 +16,8 @@ class CSV:
             raise TypeError("Invalid Argument")
 
     def __getitem__(self, index):
+        if index < 0 or index >= len(self.__table):
+            raise IndexError("Index out of range")
         return self.__table[index]
 
     def __len__(self):
@@ -45,7 +47,7 @@ class CSV:
                 named_sample(row, length))
         filtered_data = [self.__get_average_row(country_dict[country])
                          for country in country_dict]
-        return CSV(filtered_data)
+        return CsvTable(filtered_data)
 
     @staticmethod
     def __read_csv(file_path: str) -> List[Dict]:

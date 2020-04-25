@@ -1,7 +1,7 @@
 from os.path import join
 from sys import argv, exit
-from utils.csv_utils import CSV
-from utils.fasta_utils import Fasta
+from utils.csv_table import CsvTable
+from utils.fasta_map import FastaMap
 
 if __name__ == '__main__':
     if len(argv) != 2:
@@ -12,7 +12,7 @@ if __name__ == '__main__':
     csv_path = join(data_dir, "sequences.csv")
     fasta_path = join(data_dir, "sequences.fasta")
 
-    fasta = Fasta(fasta_path)
-    csv_data = CSV(csv_path).filter()
+    fasta = FastaMap(fasta_path)
+    csv_data = CsvTable(csv_path).filter()
 
     print(csv_data)

@@ -1,11 +1,13 @@
 from typing import Tuple, Dict
 
 
-class Fasta:
+class FastaMap:
     def __init__(self, file_path):
         self.__data = self._read_fasta(file_path)
 
     def __getitem__(self, rna_id):
+        if rna_id not in self.__data:
+            raise KeyError('Id not found')
         return self.__data[rna_id]
 
     def compare_rna(self, id1, id2):
