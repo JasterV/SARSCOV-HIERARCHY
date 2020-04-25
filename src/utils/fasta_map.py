@@ -2,6 +2,9 @@ from typing import Tuple, Dict
 
 
 class FastaMap:
+    """Represents a Map that stores RNA codes
+    Arguments: file_path: The path to the .fasta file -> String
+    """
     def __init__(self, file_path):
         self.__data = self._read_fasta(file_path)
 

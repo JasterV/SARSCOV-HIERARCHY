@@ -5,9 +5,10 @@ from prettytable import PrettyTable
 
 
 class CsvTable:
+    """Helps to handle .csv files data and its processing
+    Arguments: arg -> CSV filepath or information
+    """
     def __init__(self, arg: Union[str, List[Dict]]):
-        """Arguments: arg -> CSV filepath or information
-        """
         if isinstance(arg, str):
             self.__table = self.__read_csv(arg)
         elif isinstance(arg, list):
