@@ -17,7 +17,8 @@ if __name__ == '__main__':
 
     filtered_data = filter_country_average_length(csv_data)
 
-    id1 = filtered_data[0]['Accession']
-    id2 = filtered_data[1]['Accession']
-    result = fasta.compare_rna(id1, id2)
-    print(result)
+    for i in range(len(filtered_data) - 1):
+        for j in range(i + 1, len(filtered_data)):
+            id1, id2 = filtered_data[i]['Accession'], filtered_data[j]['Accession']
+            result = fasta.compare_rna(id1, id2)
+            print(f"Rna {id1} with Rna {id2} => {result}")
