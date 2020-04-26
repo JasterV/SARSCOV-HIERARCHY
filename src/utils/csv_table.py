@@ -29,11 +29,11 @@ class CsvTable:
             yield row
 
     def __str__(self):
-        prettyTable = PrettyTable(['Accession', 'Release_Date', 'Species', 'Length',
+        pretty_table = PrettyTable(['Accession', 'Release_Date', 'Species', 'Length',
                                    'Geo_Location', 'Host', 'Isolation_Source', 'Collection_Date'])
         for row in self:
-            prettyTable.add_row(row.values())
-        return str(prettyTable)
+            pretty_table.add_row(row.values())
+        return str(pretty_table)
 
     def filter(self):
         """Filters the csv by country for average length's
