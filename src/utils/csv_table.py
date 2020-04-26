@@ -1,6 +1,7 @@
 from collections import namedtuple
 from csv import DictReader
 from typing import List, Union, Dict
+
 from prettytable import PrettyTable
 
 
@@ -8,6 +9,7 @@ class CsvTable:
     """Helps to handle .csv files data and its processing
     Arguments: arg -> CSV filepath or information
     """
+
     def __init__(self, arg: Union[str, List[Dict]]):
         if isinstance(arg, str):
             self.__table = self.__read_csv(arg)
@@ -17,7 +19,9 @@ class CsvTable:
             raise TypeError("Invalid Argument")
 
     def __getitem__(self, index):
-        if index < 0 or index >= len(self.__table):
+        if isinstance(index, slice):
+            return self.__table[index]
+        if abs(index) > len(self.__table):
             raise IndexError("Index out of range")
         return self.__table[index]
 
@@ -30,7 +34,7 @@ class CsvTable:
 
     def __str__(self):
         pretty_table = PrettyTable(['Accession', 'Release_Date', 'Species', 'Length',
-                                   'Geo_Location', 'Host', 'Isolation_Source', 'Collection_Date'])
+                                    'Geo_Location', 'Host', 'Isolation_Source', 'Collection_Date'])
         for row in self:
             pretty_table.add_row(row.values())
         return str(pretty_table)
