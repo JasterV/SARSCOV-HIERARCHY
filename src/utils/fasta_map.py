@@ -13,7 +13,7 @@ class FastaMap:
             raise KeyError('Id not found')
         return self.__data[rna_id]
 
-    def compare_rna(self, id1, id2):
+    def compare_samples(self, id1, id2):
         """Compares to rna codes
         Arguments: id1, id2 -> String
         return: float
