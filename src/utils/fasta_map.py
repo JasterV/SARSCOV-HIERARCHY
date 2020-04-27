@@ -1,5 +1,6 @@
 import concurrent.futures
 from collections import namedtuple
+from multiprocessing.dummy import Pool
 from typing import Tuple, Dict, List, Union, Any
 
 from utils.csv_table import CsvTable
@@ -59,15 +60,14 @@ class FastaMap:
         """Estructura del que pot ser la funció de creació de sets
         """
 
-        to_compare = []
+        to_compare = [(sample_first['Accession'], sample_two['Accession'])
+                      for i, sample_first in enumerate(csv_table)
+                      for sample_two in csv_table[1 + i:]]
         compares = dict()
-        for i, sample_first in enumerate(csv_table):
-            for sample_two in csv_table[1 + i:]:
-                id1, id2 = sample_first['Accession'], sample_two['Accession']
-                to_compare.append((id1, id2))
-        with concurrent.futures.ProcessPoolExecutor() as executor:
-            results = executor.map(self.compare_multi, to_compare)
-        print(results)
+        p = Pool()
+        results = p.map(self.compare_multi, to_compare)
+        p.close()
+        p.join()
         for x in results:
             compares.setdefault(x.id1, set())
             compares[x.id1].add(x.id2)
@@ -76,12 +76,9 @@ class FastaMap:
         return list_relations
 
     def compare_multi(self, ids):
-        named_compare = namedtuple("comparation", "id1 id2")
+        named_compare = namedtuple("comparation", "id1 id2 result")
         result = self.compare_samples(ids[0], ids[1])
-        if result > 0.9:
-            r = named_compare(ids[0], ids[1])
-        print(r)
-        return r
+        return named_compare(ids[0], ids[1], result)
 
     @staticmethod
     def generate_relations(compares):
