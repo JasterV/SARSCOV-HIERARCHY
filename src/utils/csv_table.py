@@ -21,7 +21,7 @@ class CsvTable:
     def __getitem__(self, index):
         if isinstance(index, slice):
             return self.__table[index]
-        if abs(index) > len(self.__table):
+        if abs(index) >= len(self.__table):
             raise IndexError("Index out of range")
         return self.__table[index]
 
