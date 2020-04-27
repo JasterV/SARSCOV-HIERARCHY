@@ -1,3 +1,4 @@
+import time
 from typing import Tuple, Dict, List, Union, Any
 
 from utils.csv_table import CsvTable
@@ -53,10 +54,10 @@ class FastaMap:
         genome_id = header.split('|')[0].strip()
         return genome_id, genome
 
-    def group_samples(self,csv_table: CsvTable) -> List[Union[set, Any]]:
+    def group_samples(self, csv_table: CsvTable) -> List[Union[set, Any]]:
         """Estructura del que pot ser la funció de creació de sets
         """
-        # groups = list()
+        star_time = time.time()
         compares = dict()
         for i, sample_first in enumerate(csv_table):
             for sample_two in csv_table[1 + i:]:
@@ -67,7 +68,8 @@ class FastaMap:
                     compares[id1].add(id2)
 
         list_relations = FastaMap.generate_relations(compares)
-
+        end_time = time.time()-star_time
+        print(end_time)
         return list_relations
 
     @staticmethod
