@@ -53,8 +53,7 @@ class FastaMap:
         genome_id = header.split('|')[0].strip()
         return genome_id, genome
 
-    @staticmethod
-    def group_samples(csv_table: CsvTable) -> List[Union[set, Any]]:
+    def group_samples(self,csv_table: CsvTable) -> List[Union[set, Any]]:
         """Estructura del que pot ser la funció de creació de sets
         """
         # groups = list()
@@ -62,7 +61,7 @@ class FastaMap:
         for i, sample_first in enumerate(csv_table):
             for sample_two in csv_table[1 + i:]:
                 id1, id2 = sample_first['Accession'], sample_two['Accession']
-                result = FastaMap.compare_samples(id1, id2)
+                result = self.compare_samples(id1, id2)
                 if result > 0.9:
                     compares.setdefault(id1, set())
                     compares[id1].add(id2)
