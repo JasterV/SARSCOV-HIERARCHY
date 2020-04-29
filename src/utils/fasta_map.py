@@ -17,7 +17,7 @@ class FastaMap:
             raise KeyError('Id not found')
         return self.__data[rna_id]
 
-    def compare_samples(self, id1, id2):
+    def compare_samples(self, id1: str, id2: str) -> float:
         """Compares to rna codes
         Arguments: id1, id2 -> String
         return: float
@@ -59,6 +59,7 @@ class FastaMap:
         """
         star_time = time.time()
         compares = dict()
+        list_relations = ()
         for i, sample_first in enumerate(csv_table):
             for sample_two in csv_table[1 + i:]:
                 id1, id2 = sample_first['Accession'], sample_two['Accession']
@@ -66,19 +67,19 @@ class FastaMap:
                 if result > 0.9:
                     compares.setdefault(id1, set())
                     compares[id1].add(id2)
-
-        list_relations = FastaMap.generate_relations(compares)
-        end_time = time.time()-star_time
+        if compares:
+            list_relations = self.generate_relations(compares)
+        end_time = time.time() - star_time
         print(end_time)
         return list_relations
 
     @staticmethod
     def generate_relations(compares):
-        list_relations = []
+        list_relations = ()
         for elements in compares.keys():
             _, tree = FastaMap.explore_relations(compares, elements)
             if tree not in list_relations:
-                list_relations.append(tree)
+                list_relations = list_relations + (tree,)
         return list_relations
 
     @staticmethod
