@@ -1,8 +1,9 @@
 import concurrent.futures
+import time
 from collections import namedtuple
 from multiprocessing.dummy import Pool
 from typing import Tuple, Dict, List, Union, Any
-
+import ctypes
 from utils.csv_table import CsvTable
 
 
@@ -24,14 +25,10 @@ class FastaMap:
         Arguments: id1, id2 -> String
         return: float
         """
+
+        compare_module = ctypes.CDLL('src/utils/compares.so')
         rna1, rna2 = self[id1], self[id2]
-        len1, len2 = len(rna1), len(rna2)
-        matches = 0
-        for i in range(min(len1, len2)):
-            symbol1, symbol2 = rna1[i], rna2[i]
-            if symbol1 == symbol2 or symbol1 == 'N' or symbol2 == 'N':
-                matches += 1
-        return matches / max(len1, len2)
+        return compare_module.compares(rna1, rna2)
 
     def _read_fasta(self, file_path: str) -> Dict[str, str]:
         """Reads a fasta file and returns a dict where the keys are the accessions
@@ -59,20 +56,17 @@ class FastaMap:
     def group_samples(self, csv_table: CsvTable) -> List[Union[set, Any]]:
         """Estructura del que pot ser la funció de creació de sets
         """
-
+        fr = time.time()
         to_compare = [(sample_first['Accession'], sample_two['Accession'])
                       for i, sample_first in enumerate(csv_table)
                       for sample_two in csv_table[1 + i:]]
         compares = dict()
-        p = Pool()
-        results = p.map(self.compare_multi, to_compare)
-        p.close()
-        p.join()
+        results = [self.compare_multi(x) for x in to_compare]
         for x in results:
             compares.setdefault(x.id1, set())
             compares[x.id1].add(x.id2)
         list_relations = FastaMap.generate_relations(compares)
-
+        print(time.time()-fr)
         return list_relations
 
     def compare_multi(self, ids):

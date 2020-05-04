@@ -61,4 +61,4 @@ if __name__ == '__main__':
     fasta = FastaMap(fasta_path)
     csv_table = CsvTable(csv_path).filter()
     groups = fasta.group_samples(csv_table)
-    print(groups)
+
