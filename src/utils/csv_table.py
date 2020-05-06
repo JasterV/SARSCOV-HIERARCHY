@@ -1,8 +1,9 @@
 from collections import namedtuple
 from csv import DictReader
-from typing import List, Union, Dict
-
+from typing import List, Union, Dict, Iterable
 from prettytable import PrettyTable
+from utils.algorithms import quick_select
+import random
 
 
 class CsvTable:
@@ -45,10 +46,8 @@ class CsvTable:
         country_dict = dict()
         named_sample = namedtuple("data_info", "row length")
         for row, sample in enumerate(self.__table):
-            country, length = sample.get(
-                'Geo_Location', 'Unknown'), sample['Length']
-            country_dict.setdefault(country, []).append(
-                named_sample(row, length))
+            country, length = sample.get('Geo_Location', 'Unknown'), sample['Length']
+            country_dict.setdefault(country, []).append(named_sample(row, length))
         filtered_data = [self.__get_average_row(country_dict[country])
                          for country in country_dict]
         return CsvTable(filtered_data)
@@ -62,9 +61,11 @@ class CsvTable:
             reader = DictReader(csv_file, delimiter=',')
             return list(map(lambda row: dict(row), reader))
 
-    # TODO: modify sorted, only if it is necessary.
+    @staticmethod
+    def quick_select_median(values: List[tuple], pivot_fn=random.choice, index=0) -> tuple:
+        k = len(values) // 2
+        return quick_select(values, k, pivot_fn, index=index)
 
-    def __get_average_row(self, values: tuple) -> Union[dict, List[dict]]:
-        sorted_values = sorted(values, key=lambda x: x.length)
-        average_value = sorted_values[len(values) // 2]
-        return self.__table[average_value.row]
+    def __get_average_row(self, values: list) -> Union[dict, List[dict]]:
+        average_value = self.quick_select_median(values, index=1)
+        return self[average_value.row]

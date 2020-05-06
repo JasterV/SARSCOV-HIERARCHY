@@ -1,7 +1,6 @@
 from os.path import join
 from sys import argv
 from typing import Any, List, Union
-
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
 
@@ -60,5 +59,5 @@ if __name__ == '__main__':
 
     fasta = FastaMap(fasta_path)
     csv_table = CsvTable(csv_path).filter()
-    groups = fasta.group_samples(csv_table)
-    print(groups)
+    
+    print(csv_table)

@@ -1,6 +1,6 @@
-import time
 from typing import Tuple, Dict, List, Union, Any
-from csv_table import CsvTable
+from utils.csv_table import CsvTable
+import time
 
 
 class FastaMap:
