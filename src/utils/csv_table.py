@@ -19,11 +19,10 @@ class CsvTable:
             raise TypeError("Invalid Argument")
 
     def __getitem__(self, index):
-        if isinstance(index, slice):
+        try:
             return self.__table[index]
-        if abs(index) >= len(self.__table):
+        except:
             raise IndexError("Index out of range")
-        return self.__table[index]
 
     def __len__(self):
         return len(self.__table)
