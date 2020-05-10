@@ -2,7 +2,7 @@ from collections import namedtuple
 from csv import DictReader
 from typing import List, Union, Dict, Iterable
 from prettytable import PrettyTable
-from utils.algorithms import quick_select
+from utils.select import quick_select
 import random
 
 
@@ -10,7 +10,6 @@ class CsvTable:
     """Helps to handle .csv files data and its processing
     Arguments: arg -> CSV filepath or information
     """
-
     def __init__(self, arg: Union[str, List[Dict]]):
         if isinstance(arg, str):
             self.__table = self.__read_csv(arg)
@@ -47,7 +46,7 @@ class CsvTable:
         named_sample = namedtuple("data_info", "row length")
         for row, sample in enumerate(self.__table):
             country, length = sample.get('Geo_Location', 'Unknown'), sample['Length']
-            country_dict.setdefault(country, []).append(named_sample(row, length))
+            country_dict.setdefault(country.split(":")[0], []).append(named_sample(row, length))
         filtered_data = [self.__get_average_row(country_dict[country])
                          for country in country_dict]
         return CsvTable(filtered_data)

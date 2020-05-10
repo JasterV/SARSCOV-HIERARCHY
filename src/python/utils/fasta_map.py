@@ -1,7 +1,8 @@
 from typing import Tuple, Dict, List, Union, Any
 from utils.csv_table import CsvTable
-import time
 from pprint import pprint
+from lib.seqalign import needleman_wunsch
+import time
 
 
 class FastaMap:
@@ -26,7 +27,7 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna if len(rna) < 1000 else rna[:1000]
+                data[rna_id] = rna if len(rna) < 10000 else rna[:10000]
         return data
 
     def compare_samples(self, id1: str, id2: str) -> float:
@@ -35,51 +36,9 @@ class FastaMap:
         return: float
         """
         s1, s2 = self[id1], self[id2]
-        matrix = self._align_sequences(s1, s2)
-        result = self._optimal_alignment(matrix, s1, s2)
+        print(len(s1), len(s2))
+        result = needleman_wunsch(s1, s2)
         return result
-
-    @staticmethod
-    def _optimal_alignment(matrix, s1, s2, gap=-2):
-        i, j = len(s1), len(s2)
-        matches, length = 0, 0
-        while i > 0 or j > 0:
-            if FastaMap.check_match(i, j, matrix, s1, s2):
-                if s1[i - 1] == s2[j - 1]:
-                    matches += 1
-                i -= 1
-                j -= 1
-            elif i > 0 and matrix[i][j] == matrix[i - 1][j] + gap:
-                i -= 1
-            else:
-                j -= 1
-            length += 1
-        return matches / length
-
-    @staticmethod
-    def check_match(i, j, matrix, s1, s2):
-        return i > 0 and j > 0 and matrix[i][j] == matrix[i - 1][j - 1] + FastaMap.__is_match(s1[i - 1], s2[j - 1])
-
-    @staticmethod
-    def _align_sequences(s1, s2, gap=-2):
-        s1_len, s2_len = len(s1), len(s2)
-        matrix = [[0 for _ in range(s2_len + 1)] for _ in range(s1_len + 1)]
-        for i in range(s1_len + 1):
-            matrix[i][0] = gap * i
-        for j in range(s2_len + 1):
-            matrix[0][j] = gap * j
-        for i in range(1, s1_len + 1):
-            for j in range(1, s2_len + 1):
-                match = matrix[i - 1][j - 1] + \
-                        FastaMap.__is_match(s1[i - 1], s2[j - 1])
-                delete = matrix[i - 1][j] + gap
-                insert = matrix[i][j - 1] + gap
-                matrix[i][j] = max(match, delete, insert)
-        return matrix
-
-    @staticmethod
-    def __is_match(x, y, match=1, mismatch=-1):
-        return match if x == y or x == 'N' or y == 'N' else mismatch
 
     @staticmethod
     def _get_rna(genome_info_str: str) -> Tuple[str, str]:
@@ -112,15 +71,6 @@ class FastaMap:
         return list_relations
 
     @staticmethod
-    def generate_relations(compares):
-        list_relations = ()
-        for elements in compares.keys():
-            tree = FastaMap._explore_relations(compares, elements)
-            if tree not in list_relations:
-                list_relations = list_relations + (tree,)
-        return list_relations
-
-    @staticmethod
     def explore_relations(table, root):
         _, tree = FastaMap._explore_relations(table, root, [], set())
         return tree
@@ -135,3 +85,13 @@ class FastaMap:
                 path, _sets = FastaMap._explore_relations(
                     table, neighbor, path, _sets)
         return path, _sets
+
+    @staticmethod
+    def generate_relations(compares):
+        list_relations = ()
+        for elements in compares.keys():
+            tree = FastaMap.explore_relations(compares, elements)
+            if tree not in list_relations:
+                list_relations = list_relations + (tree,)
+        return list_relations
+
