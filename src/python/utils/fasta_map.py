@@ -1,7 +1,7 @@
 from typing import Tuple, Dict, List, Union, Any
 from utils.csv_table import CsvTable
 from pprint import pprint
-from lib.seqalign import needleman_wunsch
+from libs.seqalign import needleman_wunsch
 import time
 
 
