@@ -43,18 +43,22 @@ class FastaMap:
     def _optimal_alignment(matrix, s1, s2, gap=-2):
         i, j = len(s1), len(s2)
         matches, length = 0, 0
-        while (i > 0 or j > 0):
-            if i > 0 and j > 0 and matrix[i][j] == matrix[i-1][j-1] + FastaMap.__is_match(s1[i - 1], s2[j - 1]):
+        while i > 0 or j > 0:
+            if FastaMap.check_match(i, j, matrix, s1, s2):
                 if s1[i - 1] == s2[j - 1]:
                     matches += 1
                 i -= 1
                 j -= 1
-            elif i > 0 and matrix[i][j] == matrix[i-1][j] + gap:
+            elif i > 0 and matrix[i][j] == matrix[i - 1][j] + gap:
                 i -= 1
             else:
                 j -= 1
             length += 1
         return matches / length
+
+    @staticmethod
+    def check_match(i, j, matrix, s1, s2):
+        return i > 0 and j > 0 and matrix[i][j] == matrix[i - 1][j - 1] + FastaMap.__is_match(s1[i - 1], s2[j - 1])
 
     @staticmethod
     def _align_sequences(s1, s2, gap=-2):
@@ -66,8 +70,8 @@ class FastaMap:
             matrix[0][j] = gap * j
         for i in range(1, s1_len + 1):
             for j in range(1, s2_len + 1):
-                match = matrix[i-1][j-1] + \
-                    FastaMap.__is_match(s1[i - 1], s2[j - 1])
+                match = matrix[i - 1][j - 1] + \
+                        FastaMap.__is_match(s1[i - 1], s2[j - 1])
                 delete = matrix[i - 1][j] + gap
                 insert = matrix[i][j - 1] + gap
                 matrix[i][j] = max(match, delete, insert)
@@ -111,22 +115,23 @@ class FastaMap:
     def generate_relations(compares):
         list_relations = ()
         for elements in compares.keys():
-            _, tree = FastaMap.explore_relations(compares, elements)
+            tree = FastaMap._explore_relations(compares, elements)
             if tree not in list_relations:
                 list_relations = list_relations + (tree,)
         return list_relations
 
     @staticmethod
-    def explore_relations(table, root, path=None, _sets=None):
-        if _sets is None:
-            _sets = set()
-        if path is None:
-            path = []
+    def explore_relations(table, root):
+        _, tree = FastaMap._explore_relations(table, root, [], set())
+        return tree
+
+    @staticmethod
+    def _explore_relations(table, root, path, _sets):
         path += [root]
         _sets.add(root)
         _sets.update(table.get(root, ""))
         for neighbor in table.get(root, ""):
             if neighbor not in path:
-                path, _sets = FastaMap.explore_relations(
+                path, _sets = FastaMap._explore_relations(
                     table, neighbor, path, _sets)
         return path, _sets
