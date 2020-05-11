@@ -67,4 +67,7 @@ class CsvTable:
 
     def __get_average_row(self, values: list) -> Union[dict, List[dict]]:
         average_value = self.quick_select_median(values, index=1)
-        return self[average_value.row]
+        row = self[average_value.row]
+        geo_location = row['Geo_Location']
+        row['Geo_Location'] = geo_location.split(":")[0] if len(geo_location) > 0 else "Unknown"
+        return row

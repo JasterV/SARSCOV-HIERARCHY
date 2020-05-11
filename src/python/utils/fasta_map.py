@@ -29,7 +29,7 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna if len(rna) < 3000 else rna[:3000]
+                data[rna_id] = rna
         return data
 
     def compare_samples(self, id1: str, id2: str) -> float:
@@ -59,6 +59,7 @@ class FastaMap:
         to_compare = [(sample_first['Accession'], sample_two['Accession'])
                       for i, sample_first in enumerate(csv_table)
                       for sample_two in csv_table[1 + i:]]
+        print(len(to_compare))
         compares = dict()
         p = Pool()
         results = p.map(self.compare_multi, to_compare)

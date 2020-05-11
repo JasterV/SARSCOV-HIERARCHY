@@ -1,61 +1,72 @@
 #![allow(non_snake_case)]
 #![allow(dead_code)]
 
-//! A 2D Matrix of integers.
-//! This Module contains the [`Matrix`] type
-//! and its implementation.
-//! 
-//! # Examples
-//!
-//! There are one way to create a new [`Matrix`] by giving the number
-//! Of wows and columns:
-//!
-//! ```
-//! let mut m = Matrix::new(5, 6);
-//! ```
-//!
-//! You can set and get elements into the Matrix using the [`get`] and [`set`] methods:
-//!
-//!  ```
-//!     let (value, i, j) = (5, 2, 3);
-//!     m.set(value, i j);
-//!     let new_value = m.get(i, j);
-//!  ```
-//! 
-//! This module let you create a 2D growable vector of integers:
-//! 
-//! ```
-//!     let mut vec : Vector<Vector<isize>> = Matrix::vec_2d(3, 4);
-//! ```
+use std::default::Default;
+use std::ops::{Index, IndexMut};
 
-pub struct Matrix {
-    vec: Vec<Vec<isize>>,
+pub struct Matrix<T> {
+    vec: Vec<T>,
+    rows: usize,
+    cols: usize,
 }
 
-impl Matrix {
-    pub fn new(n: usize, m: usize) -> Matrix {
+impl<T> Matrix<T>
+where
+    T: Default,
+{
+    pub fn new(n: usize, m: usize) -> Matrix<T> {
         Matrix {
             vec: Matrix::vec_2d(n, m),
+            rows: n,
+            cols: m,
         }
     }
-    
-    pub fn get(&self, i: usize, j: usize) -> isize {
-        self.vec[i][j]
-    }
 
-    pub fn set(&mut self, value: isize, i: usize, j: usize) {
-        self.vec[i][j] = value;
-    }
-
-    pub fn vec_2d(n: usize, m: usize) -> Vec<Vec<isize>> {
-        let mut matrix: Vec<Vec<isize>> = Vec::with_capacity(n);
-        for _ in 0..n {
-            let mut row: Vec<isize> = Vec::with_capacity(m);
-            for _ in 0..m {
-                row.push(0);
-            }
-            matrix.push(row);
+    pub fn get(&self, i: usize, j: usize) -> Option<&T> {
+        match self.vec.get(i * self.cols + j) {
+            Some(value) => Some(value),
+            None => None,
         }
+    }
+
+    pub fn get_mut(&mut self, i: usize, j: usize) -> Option<&mut T> {
+        match self.vec.get_mut(i * self.cols + j) {
+            Some(value) => Some(value),
+            None => None,
+        }
+    }
+
+    pub fn cols(&self) -> usize {
+        self.cols
+    }
+
+    pub fn rows(&self) -> usize {
+        self.rows
+    }
+
+    fn vec_2d(n: usize, m: usize) -> Vec<T> {
+        let mut matrix: Vec<T> = Vec::with_capacity(n * m);
+        matrix.resize_with(n * m, Default::default);
         matrix
+    }
+}
+
+impl<T> Index<(usize, usize)> for Matrix<T>
+where
+    T: Default,
+{
+    type Output = T;
+
+    fn index(&self, idx: (usize, usize)) -> &Self::Output {
+        self.get(idx.0, idx.1).expect("Index out of bounds")
+    }
+}
+
+impl<T> IndexMut<(usize, usize)> for Matrix<T>
+where
+    T: Default,
+{
+    fn index_mut(&mut self, idx: (usize, usize)) -> &mut Self::Output {
+        self.get_mut(idx.0, idx.1).expect("Index out of bounds")
     }
 }
