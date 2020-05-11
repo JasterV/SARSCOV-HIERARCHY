@@ -1,3 +1,5 @@
+from collections import namedtuple
+from multiprocessing.dummy import Pool
 from typing import Tuple, Dict, List, Union, Any
 from utils.csv_table import CsvTable
 from pprint import pprint
@@ -27,7 +29,7 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna if len(rna) < 10000 else rna[:10000]
+                data[rna_id] = rna if len(rna) < 7000 else rna[:7000]
         return data
 
     def compare_samples(self, id1: str, id2: str) -> float:
@@ -36,7 +38,6 @@ class FastaMap:
         return: float
         """
         s1, s2 = self[id1], self[id2]
-        print(len(s1), len(s2))
         result = needleman_wunsch(s1, s2)
         return result
 
@@ -54,21 +55,24 @@ class FastaMap:
     def group_samples(self, csv_table: CsvTable) -> List[Union[set, Any]]:
         """Estructura del que pot ser la funció de creació de sets
         """
-        star_time = time.time()
+        fr = time.time()
+        to_compare = [(sample_first['Accession'], sample_two['Accession'])
+                      for i, sample_first in enumerate(csv_table)
+                      for sample_two in csv_table[1 + i:]]
         compares = dict()
-        list_relations = ()
-        for i, sample_first in enumerate(csv_table):
-            for sample_two in csv_table[1 + i:]:
-                id1, id2 = sample_first['Accession'], sample_two['Accession']
-                result = self.compare_samples(id1, id2)
-                if result > 0.9:
-                    compares.setdefault(id1, set())
-                    compares[id1].add(id2)
-        if compares:
-            list_relations = self.generate_relations(compares)
-        end_time = time.time() - star_time
-        print(end_time)
+        p = Pool()
+        results = p.map(self.compare_multi, to_compare)
+        for x in results:
+            compares.setdefault(x.id1, set())
+            compares[x.id1].add(x.id2)
+        list_relations = FastaMap.generate_relations(compares)
+        print(time.time() - fr)
         return list_relations
+
+    def compare_multi(self, ids):
+        named_compare = namedtuple("comparation", "id1 id2 result")
+        result = self.compare_samples(ids[0], ids[1])
+        return named_compare(ids[0], ids[1], result)
 
     @staticmethod
     def explore_relations(table, root):
@@ -94,4 +98,3 @@ class FastaMap:
             if tree not in list_relations:
                 list_relations = list_relations + (tree,)
         return list_relations
-

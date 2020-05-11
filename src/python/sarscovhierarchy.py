@@ -17,4 +17,4 @@ fasta = FastaMap(fasta_path)
 csv_table = CsvTable(csv_path).filter()
 id1, id2 = csv_table[0]['Accession'], csv_table[1]['Accession']
 groups = fasta.group_samples(csv_table)
-print(groups)
+# print(groups)
