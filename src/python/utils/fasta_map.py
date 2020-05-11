@@ -59,7 +59,6 @@ class FastaMap:
         to_compare = [(sample_first['Accession'], sample_two['Accession'])
                       for i, sample_first in enumerate(csv_table)
                       for sample_two in csv_table[1 + i:]]
-        print(len(to_compare))
         compares = dict()
         p = Pool()
         results = p.map(self.compare_multi, to_compare)

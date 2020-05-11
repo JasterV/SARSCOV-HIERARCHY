@@ -6,9 +6,9 @@ mod matrix;
 pub use matrix::Matrix;
 use std::cmp::max;
 
-const GAP: isize = -2;
-const MATCH: isize = 1;
-const MISMATCH: isize = -1;
+const GAP: i16 = -2;
+const MATCH: i16 = 1;
+const MISMATCH: i16 = -1;
 
 #[allow(unused_variables)]
 #[pymodule]
@@ -24,12 +24,12 @@ fn seqalign(py: Python, m: &PyModule) -> PyResult<()> {
 /// the length of the aligned sequences.
 #[pyfunction]
 pub fn needleman_wunsch(s1: &str, s2: &str) -> PyResult<f64> {
-    let matrix: Matrix<isize> = align(s1, s2);
+    let matrix: Matrix<i16> = align(s1, s2);
     let result: f64 = optimal_alignment(&matrix, s1, s2);
     Ok(result)
 }
 
-fn optimal_alignment(matrix: &Matrix<isize>, s1: &str, s2: &str) -> f64 {
+fn optimal_alignment(matrix: &Matrix<i16>, s1: &str, s2: &str) -> f64 {
     let (bs1, bs2) = (s1.as_bytes(), s2.as_bytes());
     let (mut i, mut j) = (s1.len(), s2.len());
     let (mut matches, mut length) = (0.0, 0.0);
@@ -53,15 +53,15 @@ fn optimal_alignment(matrix: &Matrix<isize>, s1: &str, s2: &str) -> f64 {
     matches / length
 }
 
-fn align(x: &str, y: &str) -> Matrix<isize> {
-    let mut matrix: Matrix<isize> = Matrix::new(x.len() + 1, y.len() + 1);
+fn align(x: &str, y: &str) -> Matrix<i16> {
+    let mut matrix: Matrix<i16> = Matrix::new(x.len() + 1, y.len() + 1);
 
     for i in 0..(x.len() + 1) {
-        let value = GAP * i as isize;
+        let value = GAP * (i as i16);
         matrix[(i, 0)] = value;
     }
     for j in 0..(y.len() + 1) {
-        let value = GAP * j as isize;
+        let value = GAP * (j as i16);
         matrix[(0, j)] = value;
     }
 
@@ -77,7 +77,7 @@ fn align(x: &str, y: &str) -> Matrix<isize> {
     matrix
 }
 
-fn check_match(b1: u8, b2: u8) -> isize {
+fn check_match(b1: u8, b2: u8) -> i16 {
     if b1 == b2 {
         MATCH
     } else {

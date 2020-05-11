@@ -6,7 +6,6 @@ use std::ops::{Index, IndexMut};
 
 pub struct Matrix<T> {
     vec: Vec<T>,
-    rows: usize,
     cols: usize,
 }
 
@@ -17,7 +16,6 @@ where
     pub fn new(n: usize, m: usize) -> Matrix<T> {
         Matrix {
             vec: Matrix::vec_2d(n, m),
-            rows: n,
             cols: m,
         }
     }
@@ -34,14 +32,6 @@ where
             Some(value) => Some(value),
             None => None,
         }
-    }
-
-    pub fn cols(&self) -> usize {
-        self.cols
-    }
-
-    pub fn rows(&self) -> usize {
-        self.rows
     }
 
     fn vec_2d(n: usize, m: usize) -> Vec<T> {
