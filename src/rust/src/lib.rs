@@ -16,6 +16,11 @@ fn seqalign(py: Python, m: &PyModule) -> PyResult<()> {
     Ok(())
 }
 
+/// Performs global sequence alignment of two `&str`
+/// using the Needleman-Wunsch classic algorithm.
+/// The returning value is a ratio whose value is the result of
+/// dividing the matches between the two aligned sequences by
+/// the length of the aligned sequences.
 #[pyfunction]
 pub fn needleman_wunsch(s1: &str, s2: &str) -> PyResult<f64> {
     let matrix: Matrix = align(s1, s2);

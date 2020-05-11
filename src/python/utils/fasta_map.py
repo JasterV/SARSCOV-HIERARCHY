@@ -29,7 +29,7 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna if len(rna) < 7000 else rna[:7000]
+                data[rna_id] = rna if len(rna) < 3000 else rna[:3000]
         return data
 
     def compare_samples(self, id1: str, id2: str) -> float:
