@@ -1,15 +1,35 @@
-# COVID-19-CHALLENGE
+# Welcome to Covid 19 challenge 👋
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#-contributors-)
+<img src="https://img.shields.io/badge/version-0.3-blue.svg?cacheSeconds=2592000" />
 
-## CsvTable class
 
-The csv class has two ways of initializing, one that consists of reading the csv and the other where the csv has already
-been read. We also added some magic methods to represent the instance and facilitate its manipulation.
+> We read, classified samples of patients with *covid* 19 in FASTA format by their origin, and classified these samples by their approach in sequence alignment.
 
-### Filter 
+### 🏠 [Homepage](https://github.com/JasterV/COVID-19-CHALLENGE)
+### ✨ Demo
 
-- At first we create a named tuple that will contain the sample information needed for both sorting and filtering.
-- We go through the CSV table once to create a dictionary as a key we will have the region and as a value a list where 
-we will add those values registered in the named tuple.
-- When we already have the dictionary, we pass the list to the function get_average_row that will return the sample 
-line that has the average value in the samples of each region.
-- Finally the list comprehension will filter the csv with our samples.
+```python3 sarscovhierarchy.py ../data # or your path data```
+
+![](./Peek 2020-05-11 03-26.gif)
+
+### Dependencies 
+
+``` pip install -r requeriments.txt 📝```
+
+### Full Documentation
+
+[Covid 19 challenge - Documentation](https://manudiv16.github.io/Covid-19-challenge)
+
+## 👤 Contributors ✨
+
+<table>
+  <tr>    
+    <td align="center"><a href="https://www.atareao.es"><img src="https://avatars3.githubusercontent.com/u/38869988?v=4" width="100px;" alt=""/><br /><sub><b>Manu Martin</b></sub></a><br /><a href="https://github.com/JasterV/COVID-19-CHALLENGE/commits?author=manudiv16" title="Code">💻</a></td>
+    <td align="center"><a href="http://tomatesasesinos.com"><img src="https://avatars3.githubusercontent.com/u/49537445?v=4" width="100px;" alt=""/><br /><sub><b>Victor Martínez</b></sub></a><br /><a href="https://github.com/JasterV/COVID-19-CHALLENGE/commits?author=JasterV" title="Code">💻</a></td>
+  </tr>
+</table>
+- **Github**: [@manudiv16](https://github.com/manudiv16), [@JasterV](https://github.com/manudiv16)
+
+## Show your support
+
+Give a ⭐️ if this project helped you!

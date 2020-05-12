@@ -9,8 +9,9 @@ from utils.select import quick_select
 
 
 class CsvTable:
-    """Helps to handle .csv files data and its processing
-    Arguments: arg -> CSV filepath or information
+    """
+    Helps to handle .csv files data and its processing
+    :param: arg -> CSV filepath or information
     """
 
     def __init__(self, arg: Union[str, List[Dict]]):
@@ -42,8 +43,9 @@ class CsvTable:
         return str(pretty_table)
 
     def filter(self):
-        """Filters the csv by country for average length's
-        :return: CSV
+        """
+        Filters the csv by country for average length's
+        :return: CsvTable
         """
         country_dict = dict()
         named_sample = namedtuple("data_info", "row length")
@@ -56,7 +58,8 @@ class CsvTable:
 
     @staticmethod
     def __read_csv(file_path: str) -> List[Dict]:
-        """Reads a csv file
+        """
+        Reads a csv file
         :return: List[Dict]
         """
         with open(file_path, 'r') as csv_file:
@@ -65,6 +68,13 @@ class CsvTable:
 
     @staticmethod
     def quick_select_median(values: List[tuple], pivot_fn=random.choice, index=0) -> tuple:
+        """
+        Implementation quick select median sort
+        :param values: List[tuple]
+        :param pivot_fn:
+        :param index: int
+        :return: tuple
+        """
         k = len(values) // 2
         return quick_select(values, k, pivot_fn, index=index)
 
