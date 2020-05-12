@@ -28,6 +28,7 @@
     <td align="center"><a href="https://github.com/JasterV"><img src="https://avatars3.githubusercontent.com/u/49537445?v=4" width="100px;" alt=""/><br /><sub><b>Victor Martínez</b></sub></a><br /><a href="https://github.com/JasterV/COVID-19-CHALLENGE/commits?author=JasterV" title="Code">💻</a></td>
   </tr>
 </table>
+
 - **Github**: [@manudiv16](https://github.com/manudiv16), [@JasterV](https://github.com/JasterV)
 
 ## Show your support
