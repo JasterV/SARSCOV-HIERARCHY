@@ -10,7 +10,7 @@
 
 ```python3 sarscovhierarchy.py ../data # or your path data```
 
-![](./Peek 2020-05-11 03-26.gif)
+![](https://media.giphy.com/media/YRE5hZTkp57d09wcpX/giphy.gif)
 
 ### Dependencies 
 
