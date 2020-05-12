@@ -21,17 +21,11 @@ where
     }
 
     pub fn get(&self, i: usize, j: usize) -> Option<&T> {
-        match self.vec.get(i * self.cols + j) {
-            Some(value) => Some(value),
-            None => None,
-        }
+        self.vec.get(i * self.cols + j)
     }
 
     pub fn get_mut(&mut self, i: usize, j: usize) -> Option<&mut T> {
-        match self.vec.get_mut(i * self.cols + j) {
-            Some(value) => Some(value),
-            None => None,
-        }
+        self.vec.get_mut(i * self.cols + j)
     }
 
     fn vec_2d(n: usize, m: usize) -> Vec<T> {
@@ -46,7 +40,6 @@ where
     T: Default,
 {
     type Output = T;
-
     fn index(&self, idx: (usize, usize)) -> &Self::Output {
         self.get(idx.0, idx.1).expect("Index out of bounds")
     }
