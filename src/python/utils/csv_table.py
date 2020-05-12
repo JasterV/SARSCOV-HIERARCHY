@@ -1,15 +1,18 @@
+import random
 from collections import namedtuple
 from csv import DictReader
-from typing import List, Union, Dict, Iterable
+from typing import List, Union, Dict
+
 from prettytable import PrettyTable
+
 from utils.select import quick_select
-import random
 
 
 class CsvTable:
     """Helps to handle .csv files data and its processing
     Arguments: arg -> CSV filepath or information
     """
+
     def __init__(self, arg: Union[str, List[Dict]]):
         if isinstance(arg, str):
             self.__table = self.__read_csv(arg)

@@ -25,7 +25,7 @@ def quick_select(values, k, pivot_fn, index=0):
     if k < len(lows):
         return quick_select(lows, k, pivot_fn, index=index)
     elif k < len(lows) + len(equals):
-    # We got lucky and guessed the median
+        # We got lucky and guessed the median
         return equals[0]
     else:
         return quick_select(highs, k - len(lows) - len(equals), pivot_fn, index=index)

@@ -1,14 +1,16 @@
+import time
 from collections import namedtuple
 from multiprocessing.dummy import Pool
-from typing import Tuple, Dict, List, Union, Any
+from typing import Tuple, Dict, List
+
+import libs.seqalign as sq
+
 from utils.csv_table import CsvTable
-from pprint import pprint
-from libs.seqalign import needleman_wunsch
-import time
 
 
 class FastaMap:
-    """Represents a Map that stores RNA codes
+    """
+    Represents a Map that stores RNA codes
     Arguments: file_path: The path to the .fasta file -> String
     """
 
@@ -21,8 +23,11 @@ class FastaMap:
         return self.__data[rna_id]
 
     def _read_fasta(self, file_path: str) -> Dict[str, str]:
-        """Reads a fasta file and returns a dict where the keys are the accessions
+        """
+        Reads a fasta file and returns a dict where the keys are the accessions
         and the values are the RNA sequences
+        :param: file_path
+        :return: sequences
         """
         data = dict()
         with open(file_path, 'r') as fasta:
@@ -32,28 +37,22 @@ class FastaMap:
                 data[rna_id] = rna
         return data
 
-    def compare_samples(self, id1: str, id2: str) -> float:
-        """Compares to rna codes
-        Arguments: id1, id2 -> String
-        return: float
-        """
-        s1, s2 = self[id1], self[id2]
-        result = needleman_wunsch(s1, s2)
-        return result
-
     @staticmethod
     def _get_rna(genome_info_str: str) -> Tuple[str, str]:
         """Get the header and the RNA from a String
-        Argument: A String that contains info about the genome
-        Return: An Id-value tuple
+        :param: A String that contains info about the genome
+        :return: An Id-value tuple
         """
         lines = genome_info_str.split('\n')
         header, genome = lines[0], ''.join(lines[1:])
         genome_id = header.split('|')[0].strip()
         return genome_id, genome
 
-    def group_samples(self, csv_table: CsvTable) -> List[Union[set, Any]]:
-        """Estructura del que pot ser la funció de creació de sets
+    def group_samples(self, csv_table: CsvTable) -> Tuple[List[set]]:
+        """
+        Creation Sets "family samples"
+        :param: csv_table:
+        :return: tuple of relations
         """
         fr = time.time()
         to_compare = [(sample_first['Accession'], sample_two['Accession'])
@@ -69,13 +68,35 @@ class FastaMap:
         print(time.time() - fr)
         return list_relations
 
-    def compare_multi(self, ids):
-        named_compare = namedtuple("comparation", "id1 id2 result")
-        result = self.compare_samples(ids[0], ids[1])
+    def compare_multi(self, ids: tuple) -> Tuple[str, str, float]:
+        """
+        Function to parallelize comparisons
+        :param ids :
+        :return: Tuple of relations
+        """
+        named_compare = namedtuple("comparator", "id1 id2 result")
+        s1, s2 = self[ids[0]], self[ids[1]]
+        print("hola")
+        result = sq.needleman_wunsch(s1, s2)
+        print("adios")
         return named_compare(ids[0], ids[1], result)
 
     @staticmethod
-    def explore_relations(table, root):
+    def generate_relations(compares: Dict) -> Tuple[List[set]]:
+        """
+        Generate tuple of list where this list stores all sample's name
+        :param compares:
+        :return list of relation of samples:
+        """
+        list_relations = ()
+        for elements in compares.keys():
+            tree = FastaMap.explore_relations(compares, elements)
+            if tree not in list_relations:
+                list_relations = list_relations + (tree,)
+        return list_relations
+
+    @staticmethod
+    def explore_relations(table: Dict, root: str) -> set:
         _, tree = FastaMap._explore_relations(table, root, [], set())
         return tree
 
@@ -89,12 +110,3 @@ class FastaMap:
                 path, _sets = FastaMap._explore_relations(
                     table, neighbor, path, _sets)
         return path, _sets
-
-    @staticmethod
-    def generate_relations(compares):
-        list_relations = ()
-        for elements in compares.keys():
-            tree = FastaMap.explore_relations(compares, elements)
-            if tree not in list_relations:
-                list_relations = list_relations + (tree,)
-        return list_relations
