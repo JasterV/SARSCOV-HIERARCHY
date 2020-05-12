@@ -54,15 +54,17 @@ fn optimal_alignment(matrix: &Matrix<i16>, s1: &str, s2: &str) -> f64 {
 }
 
 fn align(x: &str, y: &str) -> Matrix<i16> {
-    let mut matrix: Matrix<i16> = Matrix::new(x.len() + 1, y.len() + 1);
+    let (x_len, y_len) = (x.len(), y.len());
+    let mut matrix: Matrix<i16> = Matrix::new(x_len + 1, y_len + 1);
 
-    for i in 0..(x.len() + 1) {
+    for i in 0..max(x_len + 1, y_len + 1) {
         let value = GAP * (i as i16);
-        matrix[(i, 0)] = value;
-    }
-    for j in 0..(y.len() + 1) {
-        let value = GAP * (j as i16);
-        matrix[(0, j)] = value;
+        if i < x_len + 1 {
+            matrix[(i, 0)] = value;
+        }
+        if i < y_len + 1 {
+            matrix[(0, i)] = value;
+        }
     }
 
     for (i, c1) in x.bytes().enumerate() {
@@ -78,7 +80,7 @@ fn align(x: &str, y: &str) -> Matrix<i16> {
 }
 
 fn check_match(b1: u8, b2: u8) -> i16 {
-    if b1 == b2 {
+    if b1 == b2 || b1 == b'N' || b2 == b'N' {
         MATCH
     } else {
         MISMATCH

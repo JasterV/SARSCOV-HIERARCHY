@@ -54,6 +54,7 @@ class FastaMap:
         :param: csv_table:
         :return: tuple of relations
         """
+        print("Grouping...")
         fr = time.time()
         to_compare = [(sample_first['Accession'], sample_two['Accession'])
                       for i, sample_first in enumerate(csv_table)
@@ -76,9 +77,7 @@ class FastaMap:
         """
         named_compare = namedtuple("comparator", "id1 id2 result")
         s1, s2 = self[ids[0]], self[ids[1]]
-        print("hola")
         result = sq.needleman_wunsch(s1, s2)
-        print("adios")
         return named_compare(ids[0], ids[1], result)
 
     @staticmethod
