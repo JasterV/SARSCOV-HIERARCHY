@@ -1,15 +1,12 @@
 import time
 from collections import namedtuple
-from multiprocessing.dummy import Pool
 from typing import Tuple, Dict, List, Iterable
-
-import libs.seqalign as sq
+from libs.seqalign import par_compare
 
 
 class FastaMap:
     """
     Represents a Map that stores RNA codes
-    Arguments: file_path: The path to the .fasta file -> String
     """
 
     def __init__(self, arg):
@@ -55,6 +52,18 @@ class FastaMap:
                 data[rna_id] = rna
         return data
 
+    def build_hierarchy(self) -> Tuple[List[set]]:
+        print("Grouping...")
+        fr = time.time()
+        ids = list(self.keys())
+        to_compare = list()
+        for i in range(len(ids) - 1):
+            for j in range(i + 1, len(ids)):
+                to_compare.append((ids[i], ids[j]))
+        comparisons = par_compare(to_compare, self.__data)
+        print(time.time() - fr)
+        return comparisons
+
     @staticmethod
     def _get_rna(genome_info_str: str) -> Tuple[str, str]:
         """Get the header and the RNA from a String
@@ -65,33 +74,3 @@ class FastaMap:
         header, genome = lines[0], ''.join(lines[1:])
         genome_id = header.split('|')[0].strip()
         return genome_id, genome
-
-    def group_samples(self) -> Tuple[List[set]]:
-        """
-        Creation Sets "family samples"
-        :return: tuple of relations
-        """
-        print("Grouping...")
-        p = Pool()
-        fr = time.time()
-        comparisons = dict()
-        ids = list(self.keys())
-
-        to_compare = [(ids[i], ids[i + 1]) for i in range(len(ids) - 1)]
-        results = p.map(self.compare_samples, to_compare)
-        for x in results:
-            id1, id2, result = x[0], x[1], x[2]
-            comparisons.setdefault(id1, dict())[id2] = result 
-            comparisons.setdefault(id2, dict())[id1] = result 
-        print(time.time() - fr)
-        return comparisons
-
-    def compare_samples(self, ids: tuple) -> Tuple[str, str, float]:
-        """
-        Function to parallelize comparisons
-        :param ids :
-        :return: Tuple of relations
-        """
-        s1, s2 = self[ids[0]], self[ids[1]]
-        result = sq.needleman_wunsch(s1, s2)
-        return (ids[0], ids[1], result)

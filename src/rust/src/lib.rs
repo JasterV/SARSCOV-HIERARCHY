@@ -4,7 +4,9 @@ use pyo3::wrap_pyfunction;
 mod matrix;
 
 pub use matrix::Matrix;
+use rayon::prelude::*;
 use std::cmp::max;
+use std::collections::HashMap;
 
 const GAP: i16 = -2;
 const MATCH: i16 = 1;
@@ -13,8 +15,30 @@ const MISMATCH: i16 = -1;
 #[allow(unused_variables)]
 #[pymodule]
 fn seqalign(py: Python, m: &PyModule) -> PyResult<()> {
-    m.add_wrapped(wrap_pyfunction!(needleman_wunsch))?;
+    m.add_wrapped(wrap_pyfunction!(par_compare))?;
+    m.add_wrapped(wrap_pyfunction!(compare_samples))?;
     Ok(())
+}
+
+#[pyfunction]
+pub fn compare_samples(s1: &str, s2: &str) -> PyResult<f64> {
+    let result = needleman_wunsch(s1, s2);
+    Ok(result)
+}
+
+#[pyfunction]
+pub fn par_compare(v: Vec<(&str, &str)>,map: HashMap<&str, &str>) -> PyResult<Vec<(String, String, f64)>> {
+    let results: Vec<(_, _, _)> = v
+        .par_iter()
+        .map(|x| {
+            (
+                (x.0).to_string(),
+                (x.1).to_string(),
+                needleman_wunsch(map[x.0], map[x.1]),
+            )
+        })
+        .collect();
+    Ok(results)
 }
 
 /// Performs global sequence alignment of two `&str`
@@ -22,11 +46,10 @@ fn seqalign(py: Python, m: &PyModule) -> PyResult<()> {
 /// The returning value is a ratio whose value is the result of
 /// dividing the matches between the two aligned sequences by
 /// the length of the aligned sequences.
-#[pyfunction]
-pub fn needleman_wunsch(s1: &str, s2: &str) -> PyResult<f64> {
+fn needleman_wunsch(s1: &str, s2: &str) -> f64 {
     let matrix: Matrix<i16> = align(s1, s2);
     let result: f64 = optimal_alignment(&matrix, s1, s2);
-    Ok(result)
+    result
 }
 
 fn optimal_alignment(matrix: &Matrix<i16>, s1: &str, s2: &str) -> f64 {
