@@ -10,7 +10,13 @@ if __name__ == '__main__':
     data_dir = argv[1]
     csv_path = join(data_dir, "sequences.csv")
     fasta_path = join(data_dir, "sequences.fasta")
-    fasta = FastaMap(fasta_path)
-    csv_table = CsvTable(csv_path).filter()
-    fasta.group_samples(csv_table)
 
+    csv_table = CsvTable(csv_path).group_by_country()
+    print(csv_table)
+
+    # ids = csv_table.values('Accession')
+
+    # fasta_map = FastaMap(fasta_path) \
+    #            .filter(lambda item: item[0] in ids)
+
+    # fasta.group_samples(csv_table)

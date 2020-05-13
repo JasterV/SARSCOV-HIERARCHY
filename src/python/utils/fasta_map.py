@@ -1,11 +1,9 @@
 import time
 from collections import namedtuple
 from multiprocessing.dummy import Pool
-from typing import Tuple, Dict, List
+from typing import Tuple, Dict, List, Iterable
 
 import libs.seqalign as sq
-
-from utils.csv_table import CsvTable
 
 
 class FastaMap:
@@ -14,15 +12,35 @@ class FastaMap:
     Arguments: file_path: The path to the .fasta file -> String
     """
 
-    def __init__(self, file_path):
-        self.__data = self._read_fasta(file_path)
+    def __init__(self, arg):
+        if isinstance(arg, str):
+            self.__data = self._read(arg)
+        elif isinstance(arg, Iterable):
+            self.__data = dict(arg)
+        else:
+            raise TypeError("Invalid Argument")
 
     def __getitem__(self, rna_id):
         if rna_id not in self.__data:
             raise KeyError('Id not found')
         return self.__data[rna_id]
 
-    def _read_fasta(self, file_path: str) -> Dict[str, str]:
+    def __iter__(self):
+        for key, value in self.__data.items():
+            yield key, value
+
+    def keys(self):
+        for key in self.__data.keys():
+            yield key
+
+    def values(self):
+        for value in self.__data.values():
+            yield value
+
+    def filter(self, function):
+        return FastaMap(filter(function, self))
+
+    def _read(self, file_path: str) -> Dict[str, str]:
         """
         Reads a fasta file and returns a dict where the keys are the accessions
         and the values are the RNA sequences
@@ -48,17 +66,14 @@ class FastaMap:
         genome_id = header.split('|')[0].strip()
         return genome_id, genome
 
-    def group_samples(self, csv_table: CsvTable) -> Tuple[List[set]]:
+    def group_samples(self) -> Tuple[List[set]]:
         """
         Creation Sets "family samples"
-        :param: csv_table:
         :return: tuple of relations
         """
         print("Grouping...")
         fr = time.time()
-        to_compare = [(sample_first['Accession'], sample_two['Accession'])
-                      for i, sample_first in enumerate(csv_table)
-                      for sample_two in csv_table[i + 1:]]
+
         compares = dict()
         p = Pool()
         results = p.map(self.compare_multi, to_compare)
