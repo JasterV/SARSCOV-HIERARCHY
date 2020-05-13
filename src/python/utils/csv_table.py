@@ -62,11 +62,8 @@ class CsvTable:
         return CsvTable(filtered_data)
 
     def __get_average_row(self, values: list) -> Union[dict, List[dict]]:
-        lengths = [value[1] for value in values]
-        median_length = quick_select_median(lengths)
-        median_values = filter(lambda value:
-                               value[1] == median_length, values)
-        row = self[list(median_values)[0][0]]
+        median_value = quick_select_median(values, index=1)
+        row = self[median_value[0]]
         geo_location = row['Geo_Location']
         row['Geo_Location'] = geo_location.split(":")[0] \
             if len(geo_location) > 0 \
