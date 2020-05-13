@@ -72,23 +72,26 @@ class FastaMap:
         :return: tuple of relations
         """
         print("Grouping...")
-        fr = time.time()
-
-        compares = dict()
         p = Pool()
-        results = p.map(self.compare_multi, to_compare)
-        for x in results:
-            compares.setdefault(x.id1, set())
-            compares[x.id1].add(x.id2)
-        print(time.time() - fr)
+        fr = time.time()
+        comparisons = dict()
+        ids = list(self.keys())
 
-    def compare_multi(self, ids: tuple) -> Tuple[str, str, float]:
+        to_compare = [(ids[i], ids[i + 1]) for i in range(len(ids) - 1)]
+        results = p.map(self.compare_samples, to_compare)
+        for x in results:
+            id1, id2, result = x[0], x[1], x[2]
+            comparisons.setdefault(id1, dict())[id2] = result 
+            comparisons.setdefault(id2, dict())[id1] = result 
+        print(time.time() - fr)
+        return comparisons
+
+    def compare_samples(self, ids: tuple) -> Tuple[str, str, float]:
         """
         Function to parallelize comparisons
         :param ids :
         :return: Tuple of relations
         """
-        named_compare = namedtuple("comparator", "id1 id2 result")
         s1, s2 = self[ids[0]], self[ids[1]]
         result = sq.needleman_wunsch(s1, s2)
-        return named_compare(ids[0], ids[1], result)
+        return (ids[0], ids[1], result)
