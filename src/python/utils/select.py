@@ -1,3 +1,18 @@
+from typing import List
+import random
+
+def quick_select_median(values: List[tuple], pivot_fn=random.choice, index=0) -> tuple:
+        """
+        Implementation quick select median sort
+        :param values: List[tuple]
+        :param pivot_fn:
+        :param index: int
+        :return: tuple
+        """
+        k = len(values) // 2
+        return quick_select(values, k, pivot_fn, index=index)
+
+
 def quick_select(values, k, pivot_fn, index=0):
     """
     Select the kth element in values (0 based)
