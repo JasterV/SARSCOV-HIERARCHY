@@ -58,16 +58,14 @@ class FastaMap:
         fr = time.time()
         to_compare = [(sample_first['Accession'], sample_two['Accession'])
                       for i, sample_first in enumerate(csv_table)
-                      for sample_two in csv_table[1 + i:]]
+                      for sample_two in csv_table[i + 1:]]
         compares = dict()
         p = Pool()
         results = p.map(self.compare_multi, to_compare)
         for x in results:
             compares.setdefault(x.id1, set())
             compares[x.id1].add(x.id2)
-        list_relations = FastaMap.generate_relations(compares)
         print(time.time() - fr)
-        return list_relations
 
     def compare_multi(self, ids: tuple) -> Tuple[str, str, float]:
         """
@@ -79,33 +77,3 @@ class FastaMap:
         s1, s2 = self[ids[0]], self[ids[1]]
         result = sq.needleman_wunsch(s1, s2)
         return named_compare(ids[0], ids[1], result)
-
-    @staticmethod
-    def generate_relations(compares: Dict) -> Tuple[List[set]]:
-        """
-        Generate tuple of list where this list stores all sample's name
-        :param compares:
-        :return list of relation of samples:
-        """
-        list_relations = ()
-        for elements in compares.keys():
-            tree = FastaMap.explore_relations(compares, elements)
-            if tree not in list_relations:
-                list_relations = list_relations + (tree,)
-        return list_relations
-
-    @staticmethod
-    def explore_relations(table: Dict, root: str) -> set:
-        _, tree = FastaMap._explore_relations(table, root, [], set())
-        return tree
-
-    @staticmethod
-    def _explore_relations(table, root, path, _sets):
-        path += [root]
-        _sets.add(root)
-        _sets.update(table.get(root, ""))
-        for neighbor in table.get(root, ""):
-            if neighbor not in path:
-                path, _sets = FastaMap._explore_relations(
-                    table, neighbor, path, _sets)
-        return path, _sets
