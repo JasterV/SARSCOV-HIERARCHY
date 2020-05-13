@@ -47,6 +47,32 @@ class CsvTable:
             t.append(row[column])
         return t
 
+    def group_countries_by_median_length(self):
+        """
+        Filters the csv by country for average length's
+        :return: CsvTable
+        """
+        country_dict = dict()
+        for row, sample in enumerate(self):
+            country = sample.get('Geo_Location', ' ').split(":")[0]
+            length = sample['Length']
+            country_dict.setdefault(country, []).append((row, length))
+        filtered_data = [self.__get_average_row(country_dict[country])
+                         for country in country_dict]
+        return CsvTable(filtered_data)
+
+    def __get_average_row(self, values: list) -> Union[dict, List[dict]]:
+        lengths = [value[1] for value in values]
+        median_length = quick_select_median(lengths)
+        median_values = filter(lambda value:
+                               value[1] == median_length, values)
+        row = self[list(median_values)[0][0]]
+        geo_location = row['Geo_Location']
+        row['Geo_Location'] = geo_location.split(":")[0] \
+            if len(geo_location) > 0 \
+            else "Unknown"
+        return row
+
     @staticmethod
     def __read(file_path: str) -> List[Dict]:
         """

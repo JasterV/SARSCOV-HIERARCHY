@@ -11,12 +11,13 @@ if __name__ == '__main__':
     csv_path = join(data_dir, "sequences.csv")
     fasta_path = join(data_dir, "sequences.fasta")
 
-    csv_table = CsvTable(csv_path).group_by_country()
-    print(csv_table)
+    csv_table = CsvTable(csv_path) \
+        .group_countries_by_median_length()
 
-    # ids = csv_table.values('Accession')
+    ids = csv_table.values('Accession')
 
-    # fasta_map = FastaMap(fasta_path) \
-    #            .filter(lambda item: item[0] in ids)
+    fasta_map = FastaMap(fasta_path) \
+        .filter(lambda item: item[0] in ids)
 
-    # fasta.group_samples(csv_table)
+    for key in fasta_map.keys():
+        print(key)
