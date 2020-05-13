@@ -3,7 +3,7 @@
 <img src="https://img.shields.io/badge/version-0.3-blue.svg?cacheSeconds=2592000" />
 
 
-> We read, classified samples of patients with *covid* 19 in FASTA format by their origin, and classified these samples by their approach in sequence alignment.
+> The goal of this project is to read and analize RNA sequences of the Sars-Covid-2 virus around the world and build a hierarchy tree by implementing a hierarchical clustering algorithm
 
 ### 🏠 [Homepage](https://github.com/JasterV/COVID-19-CHALLENGE)
 ### ✨ Demo
