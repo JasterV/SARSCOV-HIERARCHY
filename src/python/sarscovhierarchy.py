@@ -2,7 +2,7 @@ from sys import argv, exit
 from os.path import join
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
-from utils.sys_calculations import *
+from utils.process_info_utils import *
 
 if __name__ == '__main__':
     if len(argv) != 2:
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     print("The algorithm implemented to compare 2 samples allocates a lot of memory (Up to {:.3f} GB of memory per comparison in the worst case)".format(max_mem_per_sample))
 
     print(
-        f"\nYour computer have {mem_available} GB's of memory available right now.")
+        "\nYour computer have {:.3f} GB's of memory available right now.".format(mem_available))
 
     if mem_available > 4:
         answer = input(

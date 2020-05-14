@@ -16,7 +16,7 @@ def get_mem_available():
     return mem.available / 1000000000
 
 
-def get_threads():
+def get_num_system_cores():
     """ Returns the number of available threads on a posix/win based system """
     if sys.platform == 'win32':
         return int(environ['NUMBER_OF_PROCESSORS'])
@@ -25,7 +25,7 @@ def get_threads():
 
 
 def get_max_threads(mem_available, mem_per_sample):
-    threads_available = get_threads()
+    threads_available = get_num_system_cores()
     num_threads = math.floor(mem_available/mem_per_sample)
     max_threads = num_threads if num_threads <= threads_available else threads_available
     return max_threads
@@ -37,4 +37,4 @@ def get_duration(num_threads, num_comparisons):
 
 
 def get_max_mem_per_sample(max_sample_length):
-    return ((max_sample_length*max_sample_length)*2)/1000000000
+    return ((max_sample_length**2)*2)/1000000000
