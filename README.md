@@ -29,8 +29,6 @@
   </tr>
 </table>
 
-- **Github**: [@manudiv16](https://github.com/manudiv16), [@JasterV](https://github.com/JasterV)
-
 ## Show your support
 
 Give a ⭐️ if this project helped you!
