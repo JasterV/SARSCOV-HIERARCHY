@@ -27,9 +27,20 @@ pub fn compare_samples(s1: &str, s2: &str) -> PyResult<f64> {
 }
 
 #[pyfunction]
-pub fn par_compare(v: Vec<(&str, &str)>,map: HashMap<&str, &str>) -> PyResult<Vec<(String, String, f64)>> {
-    let results: Vec<(_, _, _)> = v
-        .par_iter()
+pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, threads: &str) -> PyResult<Vec<(String, String, f64)>> {
+    let results = match threads {
+        "single" => single_compare(v, map),
+        "unlimited" => parallel_compare(v, map),
+        _ => {
+            std::env::set_var("RAYON_NUM_THREADS", threads);
+            parallel_compare(v, map)
+        }
+    };
+    Ok(results)
+}
+
+fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, f64)> {
+    v.iter()
         .map(|x| {
             (
                 (x.0).to_string(),
@@ -37,8 +48,19 @@ pub fn par_compare(v: Vec<(&str, &str)>,map: HashMap<&str, &str>) -> PyResult<Ve
                 needleman_wunsch(map[x.0], map[x.1]),
             )
         })
-        .collect();
-    Ok(results)
+        .collect()
+}
+
+fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, f64)> {
+    v.par_iter()
+        .map(|x| {
+            (
+                (x.0).to_string(),
+                (x.1).to_string(),
+                needleman_wunsch(map[x.0], map[x.1]),
+            )
+        })
+        .collect()
 }
 
 /// Performs global sequence alignment of two `&str`

@@ -17,6 +17,9 @@ class FastaMap:
         else:
             raise TypeError("Invalid Argument")
 
+    def __len__(self):
+        return len(self.__data)
+
     def __getitem__(self, rna_id):
         if rna_id not in self.__data:
             raise KeyError('Id not found')
@@ -52,16 +55,16 @@ class FastaMap:
                 data[rna_id] = rna
         return data
 
-    def build_hierarchy(self) -> Tuple[List[set]]:
-        print("Grouping...")
+    def build_hierarchy(self, threads_option) -> Tuple[List[set]]:
+        print("Performing comparisons...")
         fr = time.time()
         ids = list(self.keys())
         to_compare = list()
         for i in range(len(ids) - 1):
             for j in range(i + 1, len(ids)):
                 to_compare.append((ids[i], ids[j]))
-        comparisons = par_compare(to_compare, self.__data)
-        print(time.time() - fr)
+        comparisons = par_compare(to_compare, self.__data, threads_option)
+        print(f"Comparisons performed in {time.time() - fr} seconds!")
         return comparisons
 
     @staticmethod
