@@ -30,7 +30,6 @@ pub fn compare_samples(s1: &str, s2: &str) -> PyResult<f64> {
 pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, threads: &str) -> PyResult<Vec<(String, String, f64)>> {
     let results = match threads {
         "single" => single_compare(v, map),
-        "unlimited" => parallel_compare(v, map),
         _ => {
             std::env::set_var("RAYON_NUM_THREADS", threads);
             parallel_compare(v, map)

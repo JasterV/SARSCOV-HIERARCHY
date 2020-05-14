@@ -2,6 +2,8 @@ from sys import argv, exit
 from os.path import join
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
+import psutil
+import math
 
 def calcule_comparisons(n):
     result = 0
@@ -25,6 +27,12 @@ if __name__ == '__main__':
         .filter(lambda item: item[0] in ids)
     print("Files processing finished!")
 
+    mem = psutil.virtual_memory()
+    gigas_available = mem.available / 1000000000
+    num_threads = math.floor(gigas_available/2)
+
+    print(f"gigas available {gigas_available}, num threads: {num_threads}")
+
     num_samples = len(fasta_map)
     num_comparisons = calcule_comparisons(num_samples)
 
@@ -37,20 +45,8 @@ if __name__ == '__main__':
         answer = input("\nDo you want to perform the comparisons using multi-threading? (Yes/No) ").strip().lower()
 
     if answer == "yes":
-        print("\nWARNING!! THE PROCESS CAN FAIL IF YOUR COMPUTER DOES NOT HAVE THE REQUIRED AMOUNT OF MEMORY TO PERFORM THIS EXECUTION")
-        answer = input("\nAre you sure? (Yes/No) ").strip().lower()
-        while answer != "yes" and answer != "no":
-            answer = input("\nAre you sure? (Yes/No) ").strip().lower()
-        if answer == "yes":
-            threads = input("\nHow many threads do you want to use? Choose 'unlimited' if you dont care about the maximum threads: ").strip().lower()
-            while not threads.isnumeric() and threads != "unlimited":
-                threads = input("\nHow many threads do you want to use? Choose 'unlimited' if you dont care about the maximum threads: ").strip().lower()
-                if threads.isnumeric() and int(threads) < 2:
-                    print("\nYou've chosen multi-threading, can't choose less than 2 threads now")
-                    threads = " "           
-            fasta_map.build_hierarchy(threads)
-        else:
-            fasta_map.build_hierarchy("single")
+        print(f"\nYou have {gigas_available} GB available, so we set the maximum threads the execution will use to {num_threads}!")
+        fasta_map.build_hierarchy(f"{num_threads}")
     else:
         fasta_map.build_hierarchy("single")
 
