@@ -1,39 +1,8 @@
 from sys import argv, exit
-from os import environ, popen
 from os.path import join
-import sys
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
-import psutil
-import math
-
-
-def calcule_comparisons(n):
-    result = 0
-    for i in range(1, n):
-        result += i
-    return result
-
-
-def get_mem_available():
-    mem = psutil.virtual_memory()
-    return mem.available / 1000000000
-
-
-def get_threads():
-    """ Returns the number of available threads on a posix/win based system """
-    if sys.platform == 'win32':
-        return int(environ['NUMBER_OF_PROCESSORS'])
-    else:
-        return int(popen('grep -c cores /proc/cpuinfo').read())
-
-
-def get_max_threads(mem_available):
-    threads_available = get_threads()
-    num_threads = math.floor(mem_available/2)
-    max_threads = num_threads if num_threads <= threads_available else threads_available
-    return max_threads
-
+from utils.sys_calculations import *
 
 if __name__ == '__main__':
     if len(argv) != 2:
@@ -51,26 +20,40 @@ if __name__ == '__main__':
         .filter(lambda item: item[0] in ids)
     print("Files processing finished!")
 
-    mem_available = get_mem_available()
-    max_threads = get_max_threads(mem_available)
+    max_length = max(map(lambda x: int(x), csv_table.values("Length")))
     num_samples = len(fasta_map)
     num_comparisons = calcule_comparisons(num_samples)
+    mem_available = get_mem_available()
+    max_mem_per_sample = get_max_mem_per_sample(max_length)
+    max_threads = get_max_threads(mem_available, max_mem_per_sample)
 
     print(
         f"\nThere are {num_samples} samples to compare in order to build the hierarchy.")
     print(
         f"So that means the program will need to perform {num_comparisons} comparisons!")
-    print("The algorithm implemented to compare 2 samples allocates a lot of memory (Up to 2 GB of memory per comparison in the worst case)")
+    print("The algorithm implemented to compare 2 samples allocates a lot of memory (Up to {:.3f} GB of memory per comparison in the worst case)".format(max_mem_per_sample))
 
-    answer = input(
-        "\nDo you want to perform the comparisons using multi-threading? (Yes/No) ").strip().lower()
-    while answer != "yes" and answer != "no":
+    print(
+        f"\nYour computer have {mem_available} GB's of memory available right now.")
+
+    if mem_available > 4:
         answer = input(
-            "\nDo you want to perform the comparisons using multi-threading? (Yes/No) ").strip().lower()
-
-    if answer == "yes":
-        print(
-            f"\nYou have {mem_available} GB available, so we set the maximum threads to {max_threads}!")
-        fasta_map.build_hierarchy(f"{max_threads}")
+            "\nYou have the required space available to use multi-threading! Do you want to? (yes/no) ").strip().lower()
+        while answer != "yes" and answer != "no":
+            answer = input(
+                "\nYou have the required space available to use multi-threading! Do you want to? (yes/no) ").strip().lower()
+        if answer == "yes":
+            print(
+                f"\nThe maximum number of threads that can be used by the execution has been set to {max_threads}.")
+            print("\nEstimated duration: {0:.3f} minutes.\n".format(
+                get_duration(max_threads, num_comparisons)))
+            fasta_map.build_hierarchy(f"{max_threads}")
+        else:
+            print("\nEstimated duration: {0:.3f} minutes.\n".format(
+                get_duration(1, num_comparisons)))
+            fasta_map.build_hierarchy("single")
     else:
+        print("\nDue to the space available in your memory, you can't use multi-threading to perform the comparisons.")
+        print("\nEstimated duration: {0:.3f} minutes.\n".format(
+            get_duration(1, num_comparisons)))
         fasta_map.build_hierarchy("single")
