@@ -21,3 +21,5 @@ toml==0.10.0
 tornado==6.0.4
 tqdm==4.46.0
 wrapt==1.12.1
+
+psutil~=5.7.0
