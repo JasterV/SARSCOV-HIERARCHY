@@ -8,7 +8,9 @@
 ### 🏠 [Homepage](https://github.com/JasterV/COVID-19-CHALLENGE)
 ### ✨ Demo
 
-```python3 sarscovhierarchy.py <data_path>
+```
+  python3 sarscovhierarchy.py <data_path>
+```
 
 ![](https://media.giphy.com/media/YRE5hZTkp57d09wcpX/giphy.gif)
 
