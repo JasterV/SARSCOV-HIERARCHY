@@ -50,7 +50,7 @@ Per molts paísos que hi hagi, els costos sempre seràn iguals, perque per exemp
 
 Aquesta part del projecte l'hem implementat amb Rust. El motiu d'aquest canvi de paradigma es deu a l'eficiencia, control i seguretat que ens aporta aquest llenguatje sobre la gestió de la memòria a l'hora de realitzar l'alineament de seqüencies.
 
-+ ##### Algoritme Needleman Wunsch
++ #### Algoritme Needleman Wunsch
 
 L'algoritme que hem escollit és ni més ni menys que el famós algoritme de *[Needleman Wunsch](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm)*.
 Tot i que no és molt complex si parlem de la seva implementació, resulta tenir un cost molt elevat tant de memòria com d'execució degut a com tracta les dades.
