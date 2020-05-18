@@ -65,7 +65,17 @@ class FastaMap:
                 to_compare.append((ids[i], ids[j]))
         comparisons = par_compare(to_compare, self.__data, threads_option)
         print(f"Comparisons performed in {time.time() - fr} seconds!")
+        print(comparisons)
         return comparisons
+
+    @staticmethod
+    def _to_dict(t):
+        result = dict()
+        for elem in t:
+            id1, id2, ratio = elem
+            result.setdefault(id1, dict())[id2] = ratio
+            result.setdefault(id2, dict())[id1] = ratio
+        return result
 
     @staticmethod
     def _get_rna(genome_info_str: str) -> Tuple[str, str]:

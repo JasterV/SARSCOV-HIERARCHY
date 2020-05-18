@@ -23,7 +23,7 @@ fn seqalign(py: Python, m: &PyModule) -> PyResult<()> {
 /// Just a wrapper for the needleman_wunsch function
 /// to be used in python.
 #[pyfunction]
-pub fn compare_samples(s1: &str, s2: &str) -> PyResult<f64> {
+pub fn compare_samples(s1: &str, s2: &str) -> PyResult<u32> {
     let result = needleman_wunsch(s1, s2);
     Ok(result)
 }
@@ -31,7 +31,7 @@ pub fn compare_samples(s1: &str, s2: &str) -> PyResult<f64> {
 /// Just a wrapper for the *single compare* and *parallel_compare*
 /// functions to be used in python.
 #[pyfunction]
-pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, option: &str) -> PyResult<Vec<(String, String, f64)>> {
+pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, option: &str) -> PyResult<Vec<(String, String, u32)>> {
     let results = match option {
         "single" => single_compare(v, map),
         _ => {
@@ -42,7 +42,7 @@ pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, option: &str)
     Ok(results)
 }
 
-fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, f64)> {
+fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u32)> {
     v.iter()
         .map(|x| {
             (
@@ -54,7 +54,7 @@ fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String
         .collect()
 }
 
-fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, f64)> {
+fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u32)> {
     v.par_iter()
         .map(|x| {
             (
@@ -67,8 +67,8 @@ fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(Stri
 }
 
 /// Performs global sequence alignment of two `&str` using the Needleman-Wunsch classic algorithm.
-/// The returning value is a ratio whose value is the result of dividing the matches 
-/// between the two aligned sequences by the length of the aligned sequences.
+/// The returning value is the distances between the 2 samples, computed considering a MATCH a value
+/// of distance 0, a GAP distance of 2 and a MISMATCH distance of 1.
 /// 
 /// # Examples
 /// ```
@@ -77,36 +77,37 @@ fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(Stri
 /// 
 ///     let result = needleman_wunsch(&s, &s1); // The alignment would produce
 ///                                             // the sequences 'HHELLO' and '-HELLO'.
-///                                             // so result is equal to 5/6.
+///                                             // so result is equal to 0*5 + 2
 /// ```
-pub fn needleman_wunsch(s1: &str, s2: &str) -> f64 {
+pub fn needleman_wunsch(s1: &str, s2: &str) -> u32 {
     let matrix: Matrix<i16> = align(s1, s2);
-    let result: f64 = optimal_alignment(&matrix, s1, s2);
+    let result: u32 = optimal_alignment(&matrix, s1, s2);
     result
 }
 
-fn optimal_alignment(matrix: &Matrix<i16>, s1: &str, s2: &str) -> f64 {
+fn optimal_alignment(matrix: &Matrix<i16>, s1: &str, s2: &str) -> u32 {
     let (bs1, bs2) = (s1.as_bytes(), s2.as_bytes());
     let (mut i, mut j) = (s1.len(), s2.len());
-    let (mut matches, mut length) = (0.0, 0.0);
+    let mut distance: u32 = 0;
     while i > 0 || j > 0 {
         if i > 0
             && j > 0
             && matrix[(i, j)] == matrix[(i - 1, j - 1)] + check_match(bs1[i - 1], bs2[j - 1])
         {
-            if bs1[i - 1] == bs2[j - 1] {
-                matches += 1.0
+            if check_match(bs1[i - 1], bs2[j - 1]) == MISMATCH {
+               distance += 1;
             }
             i -= 1;
             j -= 1;
         } else if i > 0 && matrix[(i, j)] == matrix[(i - 1, j)] + GAP {
+            distance += 2;
             i -= 1;
         } else {
+            distance += 2;
             j -= 1;
         }
-        length += 1.0;
     }
-    matches / length
+    distance
 }
 
 fn align(x: &str, y: &str) -> Matrix<i16> {
