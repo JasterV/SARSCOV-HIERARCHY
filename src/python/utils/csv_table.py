@@ -1,9 +1,12 @@
+"""
+    Csv data processing module of the fasta data storage and reading implementation
+"""
 from csv import DictReader
 from typing import List, Union, Dict
 
 from prettytable import PrettyTable
 
-from utils.select import quick_select_median
+import utils.select
 
 
 class CsvTable:
@@ -39,11 +42,15 @@ class CsvTable:
             pretty_table.add_row(row.values())
         return str(pretty_table)
 
-    def values(self, column):
-        t = list()
+    def values(self, column: int) -> List:
+        """
+        :param column:
+        :return List of values for this column:
+        """
+        list_values = list()
         for row in self:
-            t.append(row[column])
-        return t
+            list_values.append(row[column])
+        return list_values
 
     def group_countries_by_median_length(self):
         """
@@ -60,7 +67,7 @@ class CsvTable:
         return CsvTable(filtered_data)
 
     def __get_average_row(self, values: list) -> Union[dict, List[dict]]:
-        median_value = quick_select_median(values, index=1)
+        median_value = utils.select.quick_select_median(values, index=1)
         row = self[median_value[0]]
         geo_location = row['Geo_Location']
         row['Geo_Location'] = geo_location.split(":")[0] \
@@ -76,4 +83,4 @@ class CsvTable:
         """
         with open(file_path, 'r') as csv_file:
             reader = DictReader(csv_file, delimiter=',')
-            return list(map(lambda row: dict(row), reader))
+            return list(map(dict, reader))

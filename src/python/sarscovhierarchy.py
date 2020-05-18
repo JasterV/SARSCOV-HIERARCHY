@@ -1,5 +1,7 @@
 from sys import argv, exit
 from os.path import join
+from sys import argv, exit
+
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
 from utils.process_info_utils import *
@@ -26,12 +28,15 @@ if __name__ == '__main__':
     mem_available = get_mem_available()
     max_mem_per_sample = get_max_mem_per_sample(max_length)
     max_threads = get_max_threads(mem_available, max_mem_per_sample)
-
+    #TODO: keyboard stop fix
+    #TODO: restructure code
     print(
         f"\nThere are {num_samples} samples to compare in order to build the hierarchy.")
     print(
         f"So that means the program will need to perform {num_comparisons} comparisons!")
-    print("The algorithm implemented to compare 2 samples allocates a lot of memory (Up to {:.3f} GB of memory per comparison in the worst case)".format(max_mem_per_sample))
+    print(
+        "The algorithm implemented to compare 2 samples allocates a lot of memory (Up to {:.3f} GB of memory per comparison in the worst case)".format(
+            max_mem_per_sample))
 
     print(
         "\nYour computer have {:.3f} GB's of memory available right now.".format(mem_available))
