@@ -8,7 +8,6 @@
 import collections
 import time
 from typing import Tuple, Dict, List, Callable
-
 import libs.seqalign as sq
 
 
@@ -37,7 +36,6 @@ class FastaMap:
         for key, value in self.__data.items():
             yield key, value
 
-    # TODO: key and values function review
     def keys(self):
         """
         :return Generator of keys
@@ -91,6 +89,7 @@ class FastaMap:
                 to_compare.append((ids[i], ids[j]))
         comparisons = sq.par_compare(to_compare, self.__data, threads_option)
         print(f"Comparisons performed in {time.time() - start_time} seconds!")
+        print(comparisons)
         return comparisons
 
     @staticmethod

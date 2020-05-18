@@ -3,9 +3,7 @@
 """
 from csv import DictReader
 from typing import List, Union, Dict
-
 from prettytable import PrettyTable
-
 import utils.select
 
 
