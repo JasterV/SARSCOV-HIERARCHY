@@ -30,7 +30,9 @@ Com que l'objecte CsvTable permet crear una nova instancia a partir d'una llista
 
 Aquest algoritme té un cost O(n^2) en el pitjor dels casos, en el millor té un cost O(n).
 A que es degut això? Doncs bé, primer de tot recorrem un sol cop totes les mostres per construir el diccionari de paisos, fins aqui tenim O(n).
+
 Aleshores hem de recorrer cada país del diccionari seleccionant la mostra de mida mitjana amb l'algoritme *Quick Select*, el qual té un cost de O(n^2) en el pitjor dels casos i un cost de O(n) en el millor. 
+
 Imaginem que només hi ha un país, per tant el diccionari només té una llista amb totes els mostres, el cost total en el pitjor dels casos quedaría així:
 ```
 	O(n + n^2) => O(n^2)
