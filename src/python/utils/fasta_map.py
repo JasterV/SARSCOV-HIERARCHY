@@ -71,7 +71,7 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna
+                data[rna_id] = rna if len(rna) < 1000 else rna[:1000]
         return data
 
     def build_hierarchy(self, threads_option) -> Tuple[List[set]]:
@@ -89,17 +89,59 @@ class FastaMap:
                 to_compare.append((ids[i], ids[j]))
         comparisons = sq.par_compare(to_compare, self.__data, threads_option)
         print(f"Comparisons performed in {time.time() - start_time} seconds!")
-        print(comparisons)
-        return comparisons
+
+        table = self._to_dict(comparisons)
+        levels = [tuple(table.keys())]
+
+        while len(table) > 1:
+            closest_pair = self.__find_closest_pair(table)
+            new_relation = self.__build_relation(closest_pair, table)
+            table = self.__refactor_table(closest_pair, new_relation, table)
+            print(len(tuple(table.keys())))
+            levels.append(tuple(table.keys()))
+        return levels
+
+    @staticmethod
+    def __build_relation(pair, table):
+        relation = dict()
+        for elem in pair:
+            for key, value in table[elem].items():
+                if key not in pair:
+                    relation.setdefault(key, []).append(value)
+        for key in relation.keys():
+            relation[key] = min(relation[key])
+        return relation
+
+    @staticmethod
+    def __refactor_table(pair, relation, table):
+        new_table = dict()
+        new_table[pair] = relation
+        for id1, value in table.items():
+            if id1 not in pair:
+                new_table[id1] = dict()
+                for id2, distance in value.items():
+                    if id2 not in pair:
+                        new_table[id1][id2] = distance
+                new_table[id1][pair] = relation[id1]
+        return new_table
+
+    @staticmethod
+    def __find_closest_pair(table):
+        closest_pairs = list()
+        for key, value in table.items():
+            closest_id, distance = min(value.items(), key=lambda x: x[-1])
+            closest_pairs.append((key, closest_id, distance))
+        sample1, sample2, distance = min(closest_pairs, key=lambda x: x[-1])
+        return sample1, sample2
 
     @staticmethod
     def _to_dict(t):
-        result = dict()
+        d = dict()
         for elem in t:
-            id1, id2, ratio = elem
-            result.setdefault(id1, dict())[id2] = ratio
-            result.setdefault(id2, dict())[id1] = ratio
-        return result
+            id1, id2, distance = elem
+            d.setdefault(id1, dict())[id2] = distance
+            d.setdefault(id2, dict())[id1] = distance
+        return d
 
     @staticmethod
     def _get_rna(genome_info_str: str) -> Tuple[str, str]:
