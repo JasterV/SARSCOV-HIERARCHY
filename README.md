@@ -21,6 +21,7 @@
 ### Full Code Documentation
 
 [Python Code Documentation](https://manudiv16.github.io/Covid-19-challenge)
+
 [Rust Code Documentation](https://jasterv.github.io/COVID-19-CHALLENGE)
 
 ## 👤 Contributors ✨
