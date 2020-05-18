@@ -1,8 +1,6 @@
 # COVID-19 CHALLENGE
 
-Hem realitzat aquest projecte mitjançant el llenguatje de programació python. Per a la part de l'alineament de seqüencies hem utilitzat el llenguatje Rust implementant també multiprocessament per a fer més ràpida l'execució.
-
-El projecte es troba dividit en 2 carpetes principals: Data i Src. Tot el codi es troba a Src, carpeta la qual es troba subdividida en 2 altres, dividint així el codi fet amb Python i Rust.
+La majoría de parts d'aquest projecte estan desenvolupades amb Python. Per a la part de l'alineament de seqüencies hem utilitzat el llenguatje Rust implementant també multiprocessament per a fer més ràpida l'execució.
 
 Podeu trobar la documentació tant del codi de Python com de Rust al link que trobareu al fitxer readme del repositori.
 
