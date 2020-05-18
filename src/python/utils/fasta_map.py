@@ -71,15 +71,10 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna if len(rna) < 1000 else rna[:1000]
+                data[rna_id] = rna
         return data
 
-    def build_hierarchy(self, threads_option) -> Tuple[List[set]]:
-        """
-        The function that is in charge of the comparison and the hierarchy of the samples
-        :param threads_option:
-        :return:
-        """
+    def _compare_all_samples(self, threads_option):
         print("Performing comparisons...")
         start_time = time.time()
         ids = list(self.keys())
@@ -89,7 +84,15 @@ class FastaMap:
                 to_compare.append((ids[i], ids[j]))
         comparisons = sq.par_compare(to_compare, self.__data, threads_option)
         print(f"Comparisons performed in {time.time() - start_time} seconds!")
+        return comparisons
 
+    def build_hierarchy(self, threads_option) -> Tuple[List[set]]:
+        """
+        The function that is in charge of the comparison and the hierarchy of the samples
+        :param threads_option:
+        :return:
+        """
+        comparisons = self._compare_all_samples(threads_option)
         table = self._to_dict(comparisons)
         levels = [tuple(table.keys())]
 
@@ -97,8 +100,7 @@ class FastaMap:
             closest_pair = self.__find_closest_pair(table)
             new_relation = self.__build_relation(closest_pair, table)
             table = self.__refactor_table(closest_pair, new_relation, table)
-            print(len(tuple(table.keys())))
-            levels.append(tuple(table.keys()))
+            levels.append(list(table.keys()))
         return levels
 
     @staticmethod
