@@ -7,7 +7,8 @@
 
 import collections
 import time
-from typing import Tuple, Dict, List, Callable
+from typing import Tuple, Dict, List, Callable, Union, Any
+
 import libs.seqalign as sq
 
 
@@ -36,19 +37,9 @@ class FastaMap:
         for key, value in self.__data.items():
             yield key, value
 
-    def keys(self):
-        """
-        :return Generator of keys
-        """
-        for key in self.__data.keys():
-            yield key
-
-    def values(self):
-        """
-        :return Generator of values:
-        """
-        for value in self.__data.values():
-            yield value
+    @property
+    def data(self):
+        return self.__data
 
     # TODO: review filter function, classmethod
     def filter(self, function: Callable):
@@ -77,16 +68,15 @@ class FastaMap:
     def _compare_all_samples(self, threads_option):
         print("Performing comparisons...")
         start_time = time.time()
-        ids = list(self.keys())
-        to_compare = list()
-        for i in range(len(ids) - 1):
-            for j in range(i + 1, len(ids)):
-                to_compare.append((ids[i], ids[j]))
+        ids = list(self.__data.keys())
+        to_compare = [(ids[i], ids[j])
+                      for i in range(len(ids) - 1)
+                      for j in range(i + 1, len(ids))]
         comparisons = sq.par_compare(to_compare, self.__data, threads_option)
         print(f"Comparisons performed in {time.time() - start_time} seconds!")
         return comparisons
 
-    def build_hierarchy(self, threads_option) -> Tuple[List[set]]:
+    def build_hierarchy(self, threads_option) -> List[Union[Tuple[Any, ...], list]]:
         """
         The function that is in charge of the comparison and the hierarchy of the samples
         :param threads_option:
@@ -110,8 +100,7 @@ class FastaMap:
             for key, value in table[elem].items():
                 if key not in pair:
                     relation.setdefault(key, []).append(value)
-        for key in relation.keys():
-            relation[key] = min(relation[key])
+        relation = {key: min(relation[key]) for key in relation.keys()}
         return relation
 
     @staticmethod
@@ -120,10 +109,8 @@ class FastaMap:
         new_table[pair] = relation
         for id1, value in table.items():
             if id1 not in pair:
-                new_table[id1] = dict()
-                for id2, distance in value.items():
-                    if id2 not in pair:
-                        new_table[id1][id2] = distance
+                new_table[id1] = {id2: distance for id2, distance in value.items()
+                                  if id2 not in pair}
                 new_table[id1][pair] = relation[id1]
         return new_table
 
@@ -133,17 +120,16 @@ class FastaMap:
         for key, value in table.items():
             closest_id, distance = min(value.items(), key=lambda x: x[-1])
             closest_pairs.append((key, closest_id, distance))
-        sample1, sample2, distance = min(closest_pairs, key=lambda x: x[-1])
+        sample1, sample2, _ = min(closest_pairs, key=lambda x: x[-1])
         return sample1, sample2
 
     @staticmethod
-    def _to_dict(t):
-        d = dict()
-        for elem in t:
-            id1, id2, distance = elem
-            d.setdefault(id1, dict())[id2] = distance
-            d.setdefault(id2, dict())[id1] = distance
-        return d
+    def _to_dict(comparisons):
+        sample_compare = dict()
+        for id1, id2, distance in comparisons:
+            sample_compare.setdefault(id1, dict())[id2] = distance
+            sample_compare.setdefault(id2, dict())[id1] = distance
+        return sample_compare
 
     @staticmethod
     def _get_rna(genome_info_str: str) -> Tuple[str, str]:
