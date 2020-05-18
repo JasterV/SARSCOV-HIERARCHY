@@ -20,18 +20,22 @@ fn seqalign(py: Python, m: &PyModule) -> PyResult<()> {
     Ok(())
 }
 
+/// Just a wrapper for the needleman_wunsch function
+/// to be used in python.
 #[pyfunction]
 pub fn compare_samples(s1: &str, s2: &str) -> PyResult<f64> {
     let result = needleman_wunsch(s1, s2);
     Ok(result)
 }
 
+/// Just a wrapper for the *single compare* and *parallel_compare*
+/// functions to be used in python.
 #[pyfunction]
-pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, threads: &str) -> PyResult<Vec<(String, String, f64)>> {
-    let results = match threads {
+pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, option: &str) -> PyResult<Vec<(String, String, f64)>> {
+    let results = match option {
         "single" => single_compare(v, map),
         _ => {
-            std::env::set_var("RAYON_NUM_THREADS", threads);
+            std::env::set_var("RAYON_NUM_THREADS", option);
             parallel_compare(v, map)
         }
     };
@@ -62,12 +66,20 @@ fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(Stri
         .collect()
 }
 
-/// Performs global sequence alignment of two `&str`
-/// using the Needleman-Wunsch classic algorithm.
-/// The returning value is a ratio whose value is the result of
-/// dividing the matches between the two aligned sequences by
-/// the length of the aligned sequences.
-fn needleman_wunsch(s1: &str, s2: &str) -> f64 {
+/// Performs global sequence alignment of two `&str` using the Needleman-Wunsch classic algorithm.
+/// The returning value is a ratio whose value is the result of dividing the matches 
+/// between the two aligned sequences by the length of the aligned sequences.
+/// 
+/// # Examples
+/// ```
+///     let s = String::from("HELLO");
+///     let s1 = String::from("HHELLO");
+/// 
+///     let result = needleman_wunsch(&s, &s1); // The alignment would produce
+///                                             // the sequences 'HHELLO' and '-HELLO'.
+///                                             // so result is equal to 5/6.
+/// ```
+pub fn needleman_wunsch(s1: &str, s2: &str) -> f64 {
     let matrix: Matrix<i16> = align(s1, s2);
     let result: f64 = optimal_alignment(&matrix, s1, s2);
     result

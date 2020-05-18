@@ -65,8 +65,6 @@ class FastaMap:
                 to_compare.append((ids[i], ids[j]))
         comparisons = par_compare(to_compare, self.__data, threads_option)
         print(f"Comparisons performed in {time.time() - fr} seconds!")
-
-        
         return comparisons
 
     @staticmethod
