@@ -8,7 +8,7 @@
 ### 🏠 [Homepage](https://github.com/JasterV/COVID-19-CHALLENGE)
 ### ✨ Demo
 
-```python3 sarscovhierarchy.py ../data # or your path data```
+```python3 sarscovhierarchy.py <data_path>
 
 ![](https://media.giphy.com/media/YRE5hZTkp57d09wcpX/giphy.gif)
 
@@ -16,7 +16,7 @@
 
 ``` pip install -r requeriments.txt 📝```
 
-### Full Documentation
+### Full Code Documentation
 
 [Covid 19 challenge - Documentation](https://manudiv16.github.io/Covid-19-challenge)
 
@@ -31,4 +31,4 @@
 
 ## Show your support
 
-Give a ⭐️ if this project helped you!
+Give us a ⭐️ if you like this project!
