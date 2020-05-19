@@ -9,7 +9,9 @@
 ### ✨ Demo
 
 ```
-  python3 sarscovhierarchy.py <data_path>
+  1. cd src/python
+  
+  2. python3 sarscovhierarchy.py <data_path>
 ```
 
 ### Dependencies 
