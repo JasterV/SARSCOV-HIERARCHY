@@ -4,10 +4,9 @@
     Some of the lower level functions are
     performed with a connection to Rust.
 """
-
 import collections
 import time
-from typing import Tuple, Dict, List, Callable, Union, Any, Iterable
+from typing import Tuple, Dict, List, Callable, Union, Any
 
 import libs.seqalign as sq
 
@@ -20,7 +19,7 @@ class FastaMap:
     def __init__(self, arg):
         if isinstance(arg, str):
             self.__data = self._read(arg)
-        elif isinstance(arg, Iterable):
+        elif isinstance(arg, collections.Iterable):
             self.__data = dict(arg)
         else:
             raise TypeError("Invalid Argument")
@@ -37,7 +36,6 @@ class FastaMap:
         for key, value in self.__data.items():
             yield key, value
 
-    # TODO: review filter function, classmethod
     def filter(self, function: Callable):
         """
         Create a new instance of FastaMap with new values
@@ -96,7 +94,7 @@ class FastaMap:
             for key, value in table[elem].items():
                 if key not in pair:
                     relation.setdefault(key, []).append(value)
-        relation = {key: min(relation[key]) for key in relation.keys()}
+        relation = {key: min(relation[key]) for key in relation}
         return relation
 
     @staticmethod
