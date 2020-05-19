@@ -12,8 +12,6 @@
   python3 sarscovhierarchy.py <data_path>
 ```
 
-![](https://media.giphy.com/media/YRE5hZTkp57d09wcpX/giphy.gif)
-
 ### Dependencies 
 
 ``` pip install -r requeriments.txt 📝```
