@@ -1,3 +1,8 @@
+
+//! The goal of this module is to optimize the global sequence alignment
+//! process of many sequences implementing the Needleman-Wunsch algorithm
+//! And getting help of the Rayon Crate to parallelize the execution.
+
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 
@@ -42,7 +47,9 @@ pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, option: &str)
     Ok(results)
 }
 
-fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u32)> {
+/// Gets a Vector of tuples that contains 2 keys of the HashMap parameter,
+/// then compare the samples contained on the HashMap 2 by 2 using only 1 thread.
+pub fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u32)> {
     v.iter()
         .map(|x| {
             (
@@ -54,7 +61,10 @@ fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String
         .collect()
 }
 
-fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u32)> {
+/// Gets a Vector of tuples that contains 2 keys of the HashMap parameter,
+/// then compare the samples contained on the HashMap 2 by 2 through multi-processing.
+/// To do that, the parallel iterator and map functions of the Rayon Crate are used.
+pub fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u32)> {
     v.par_iter()
         .map(|x| {
             (

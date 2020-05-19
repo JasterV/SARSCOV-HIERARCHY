@@ -63,7 +63,7 @@ def run():
         .filter(lambda item: item[0] in ids)
     print("Files processing finished!")
 
-    max_length = max(map(int, csv_table.values("Length")))
+    max_length = max(map(lambda x: int(x), csv_table.values("Length")))
     num_samples = len(fasta_map)
     num_comparisons = piu.calcule_comparisons(num_samples)
     mem_available = piu.get_mem_available()

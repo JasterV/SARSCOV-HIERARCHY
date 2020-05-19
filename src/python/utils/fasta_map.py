@@ -7,7 +7,7 @@
 
 import collections
 import time
-from typing import Tuple, Dict, List, Callable, Union, Any
+from typing import Tuple, Dict, List, Callable, Union, Any, Iterable
 
 import libs.seqalign as sq
 
@@ -20,7 +20,7 @@ class FastaMap:
     def __init__(self, arg):
         if isinstance(arg, str):
             self.__data = self._read(arg)
-        elif isinstance(arg, collections.Iterable):
+        elif isinstance(arg, Iterable):
             self.__data = dict(arg)
         else:
             raise TypeError("Invalid Argument")
@@ -36,10 +36,6 @@ class FastaMap:
     def __iter__(self):
         for key, value in self.__data.items():
             yield key, value
-
-    @property
-    def data(self):
-        return self.__data
 
     # TODO: review filter function, classmethod
     def filter(self, function: Callable):

@@ -1,6 +1,6 @@
 # Welcome to Covid 19 challenge 👋
 [![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#-contributors-)
-<img src="https://img.shields.io/badge/version-0.7-blue.svg?cacheSeconds=2592000" />
+<img src="https://img.shields.io/badge/version-0.8-blue.svg?cacheSeconds=2592000" />
 
 
 > The goal of this project is to read and analize RNA sequences of the Sars-Covid-2 virus around the world and build a hierarchy tree by implementing a hierarchical clustering algorithm
@@ -9,10 +9,10 @@
 ### ✨ Demo
 
 ```
-  python3 sarscovhierarchy.py <data_path>
+cd src/python
+  
+python3 sarscovhierarchy.py <data_path>
 ```
-
-![](https://media.giphy.com/media/YRE5hZTkp57d09wcpX/giphy.gif)
 
 ### Dependencies 
 
