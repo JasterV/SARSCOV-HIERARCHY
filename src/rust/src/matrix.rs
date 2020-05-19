@@ -60,10 +60,16 @@ where
         }
     }
 
+    // Get an immutable reference of the value on matrix[(i, j)]
+    // [`Return`]: An Option that returns None if the index is out of range
+    //             or the reference within a [`Some`] variant.
     pub fn get(&self, i: usize, j: usize) -> Option<&T> {
         self.vec.get(i * self.cols + j)
     }
 
+    // Get an mutable reference of the value on matrix[(i, j)]
+    // [`Return`]: An Option that returns None if the index is out of range
+    //             or the reference within a [`Some`] variant.
     pub fn get_mut(&mut self, i: usize, j: usize) -> Option<&mut T> {
         self.vec.get_mut(i * self.cols + j)
     }

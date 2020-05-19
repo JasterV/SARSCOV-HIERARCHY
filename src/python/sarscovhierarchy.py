@@ -23,6 +23,8 @@ if __name__ == '__main__':
 
     max_length = max(map(lambda x: int(x), csv_table.values("Length")))
     num_samples = len(fasta_map)
+
+
     num_comparisons = calcule_comparisons(num_samples)
     mem_available = get_mem_available()
     max_mem_per_sample = get_max_mem_per_sample(max_length)
@@ -36,9 +38,9 @@ if __name__ == '__main__':
     print(
         "The algorithm implemented to compare 2 samples allocates a lot of memory (Up to {:.3f} GB of memory per comparison in the worst case)".format(
             max_mem_per_sample))
-
     print(
         "\nYour computer have {:.3f} GB's of memory available right now.".format(mem_available))
+        
     result = list()
     if mem_available > 4:
         answer = input(
