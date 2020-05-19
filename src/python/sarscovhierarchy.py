@@ -31,7 +31,7 @@ def check_threading(available_mem, max_threads):
 def ask(question, *answers):
     answer = input(f"{question} ({'/'.join(answers)}) ").strip().lower()
     while answer not in answers:
-        answer = input(f"\n{question} (yes/no) ").strip().lower()
+        answer = input(f"\n{question} ({'/'.join(answers)}) ").strip().lower()
     return answer
 
 
