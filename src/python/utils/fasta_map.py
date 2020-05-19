@@ -85,7 +85,6 @@ class FastaMap:
             new_relation = self.__build_relation(closest_pair, table)
             table = self.__refactor_table(closest_pair, new_relation, table)
             levels.append(list(table.keys()))
-        return levels
 
     @staticmethod
     def __build_relation(pair, table):

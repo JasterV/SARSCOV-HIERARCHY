@@ -11,15 +11,15 @@ from utils.process_info_utils import ProcessInfo
 def build_hierarchy(fasta, piu):
     threads = check_threading(piu.mem_available, piu.max_threads)
     print("\nEstimated duration: {0:.3f} minutes.\n".format(
-        piu.estimated_duration(threads, piu.num_comparisons)))
+        piu.estimated_duration(threads)))
     threads_option = str(threads) if threads > 1 else "single"
     fasta.build_hierarchy(threads_option)
 
 
 def check_threading(available_mem, max_threads):
+    question = "You have the required space available to use multi-threading! Do you want to?" 
     if available_mem > 4:
-        answer = ask(
-            "You have the required space available to use multi-threading! Do you want to?")
+        answer = ask(question, 'yes', 'no')
         if answer == 'yes':
             print(
                 f"\nThe maximum number of threads that can be "
@@ -28,9 +28,9 @@ def check_threading(available_mem, max_threads):
     return 1
 
 
-def ask(question):
-    answer = input(f"{question} (yes/no) ").strip().lower()
-    while answer not in ('yes', 'no'):
+def ask(question, *answers):
+    answer = input(f"{question} ({'/'.join(answers)}) ").strip().lower()
+    while answer not in answers:
         answer = input(f"\n{question} (yes/no) ").strip().lower()
     return answer
 
@@ -38,7 +38,7 @@ def ask(question):
 signal.signal(signal.SIGTSTP, signal.SIG_IGN)
 
 
-def run():
+def main():
     data_dir = argv[1]
     csv_path = join(data_dir, "sequences.csv")
     fasta_path = join(data_dir, "sequences.fasta")
@@ -59,10 +59,9 @@ def run():
 
 if __name__ == '__main__':
     if len(argv) == 2:
-        pid = os.getpid()
         pid_h = os.fork()
         if pid_h == 0:
-            run()
+            main()
         else:
             try:
                 os.wait()
