@@ -58,7 +58,7 @@ class ProcessInfo:
         :param num_comparisons:
         :return estimated time execution in minutes:
         """
-        comparison_duration = 3.5
+        comparison_duration = 2
         return ((self.num_comparisons * comparison_duration) / num_threads) / 60
 
     def show_system_info(self):
