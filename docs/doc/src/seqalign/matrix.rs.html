@@ -162,16 +162,16 @@
         }
     }
 
-    <span class="comment">// Get an immutable reference of the value on matrix[(i, j)]</span>
-    <span class="comment">// [`Return`]: An Option that returns None if the index is out of range</span>
-    <span class="comment">//             or the reference within a [`Some`] variant.</span>
+    <span class="doccomment">/// Get an immutable reference of the value on matrix[(i, j)]</span>
+    <span class="doccomment">/// **Return**: An Option that returns None if the index is out of range</span>
+    <span class="doccomment">///             or the reference within a [`Some`] variant.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>, <span class="ident">j</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">vec</span>.<span class="ident">get</span>(<span class="ident">i</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">cols</span> <span class="op">+</span> <span class="ident">j</span>)
     }
 
-    <span class="comment">// Get an mutable reference of the value on matrix[(i, j)]</span>
-    <span class="comment">// [`Return`]: An Option that returns None if the index is out of range</span>
-    <span class="comment">//             or the reference within a [`Some`] variant.</span>
+    <span class="doccomment">/// Get an mutable reference of the value on matrix[(i, j)]</span>
+    <span class="doccomment">/// **Return**: An Option that returns None if the index is out of range</span>
+    <span class="doccomment">///             or the reference within a [`Some`] variant.</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">get_mut</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">i</span>: <span class="ident">usize</span>, <span class="ident">j</span>: <span class="ident">usize</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">vec</span>.<span class="ident">get_mut</span>(<span class="ident">i</span> <span class="op">*</span> <span class="self">self</span>.<span class="ident">cols</span> <span class="op">+</span> <span class="ident">j</span>)
     }
