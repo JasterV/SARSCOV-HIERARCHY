@@ -5,7 +5,7 @@ from sys import argv
 
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
-from utils.process_info_utils import ProcessInfo
+from utils.process_info import ProcessInfo
 
 signal.signal(signal.SIGTSTP, signal.SIG_IGN)
 
