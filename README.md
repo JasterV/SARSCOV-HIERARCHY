@@ -6,17 +6,18 @@
 > The goal of this project is to read and analize RNA sequences of the Sars-Covid-2 virus around the world and build a hierarchy tree by implementing a hierarchical clustering algorithm
 
 ### 🏠 [Homepage](https://github.com/JasterV/COVID-19-CHALLENGE)
-### ✨ Demo
+
+### Install Dependencies 
+
+``` pip install -r requeriments.txt 📝```
+
+### ✨ Execute
 
 ```
 cd src/python
   
 python3 sarscovhierarchy.py <data_path>
 ```
-
-### Dependencies 
-
-``` pip install -r requeriments.txt 📝```
 
 ### Full Code Documentation
 
