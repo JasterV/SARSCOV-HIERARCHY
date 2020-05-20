@@ -3,7 +3,9 @@
 """
 from csv import DictReader
 from typing import List, Union, Dict
+
 from prettytable import PrettyTable
+
 import utils.select
 
 
@@ -34,21 +36,22 @@ class CsvTable:
         for row in self.__table:
             yield row
 
+    @property
+    def table(self):
+        return self.__table
+
     def __str__(self):
         pretty_table = PrettyTable(list(self.__table[0].keys()))
         for row in self:
             pretty_table.add_row(row.values())
         return str(pretty_table)
 
-    def values(self, column: int) -> List:
+    def values(self, column: str) -> List[str]:
         """
         :param column:
         :return List of values for this column:
         """
-        list_values = list()
-        for row in self:
-            list_values.append(row[column])
-        return list_values
+        return [row[column] for row in self]
 
     def group_countries_by_median_length(self):
         """
