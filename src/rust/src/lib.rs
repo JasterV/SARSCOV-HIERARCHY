@@ -33,47 +33,23 @@ pub fn compare_samples(s1: &str, s2: &str) -> PyResult<u16> {
     Ok(result)
 }
 
-/// Just a wrapper for the *single compare* and *parallel_compare*
-/// functions to be used in python.
-#[pyfunction]
-pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, option: &str) -> PyResult<Vec<(String, String, u16)>> {
-    let results = match option {
-        "single" => single_compare(v, map),
-        _ => {
-            std::env::set_var("RAYON_NUM_THREADS", option);
-            parallel_compare(v, map)
-        }
-    };
-    Ok(results)
-}
-
-/// Gets a Vector of tuples that contains 2 keys of the HashMap parameter,
-/// then compare the samples contained on the HashMap 2 by 2 using only 1 thread.
-pub fn single_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u16)> {
-    v.iter()
-        .map(|x| {
-            (
-                (x.0).to_string(),
-                (x.1).to_string(),
-                needleman_wunsch(map[x.0], map[x.1]),
-            )
-        })
-        .collect()
-}
-
-/// Gets a Vector of tuples that contains 2 keys of the HashMap parameter,
-/// then compare the samples contained on the HashMap 2 by 2 through multi-processing.
+/// Gets a Vector of tuples that contains 2 keys of the HashMap parameter, 
+/// then compare the samples contained on the HashMap 2 by 2 through multi-processing. 
 /// To do that, the parallel iterator and map functions of the Rayon Crate are used.
-pub fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(String, String, u16)> {
-    v.par_iter()
-        .map(|x| {
-            (
-                (x.0).to_string(),
-                (x.1).to_string(),
-                needleman_wunsch(map[x.0], map[x.1]),
-            )
-        })
-        .collect()
+#[pyfunction]
+pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, num_threads: &str) -> PyResult<Vec<(String, String, u16)>> {
+    std::env::set_var("RAYON_NUM_THREADS", num_threads);
+    let results = 
+            v.par_iter()
+            .map(|x| {
+                (
+                    (x.0).to_string(),
+                    (x.1).to_string(),
+                    needleman_wunsch(map[x.0], map[x.1]),
+                )
+            })
+            .collect();
+    Ok(results)
 }
 
 /// Performs global sequence alignment of two `&str` using the Needleman-Wunsch classic algorithm.
@@ -89,36 +65,7 @@ pub fn parallel_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>) -> Vec<(
 ///                                             // the sequences 'HHELLO' and '-HELLO'.
 ///                                             // so result is equal to 0*5 + 2
 /// ```
-pub fn needleman_wunsch(s1: &str, s2: &str) -> u16 {
-    let matrix: Matrix<u16> = align(s1, s2);
-    let result: u16 = optimal_alignment(&matrix, s1, s2);
-    result
-}
-
-fn optimal_alignment(matrix: &Matrix<u16>, s1: &str, s2: &str) -> u16 {
-    let (bs1, bs2) = (s1.as_bytes(), s2.as_bytes());
-    let (mut i, mut j) = (s1.len(), s2.len());
-    let mut distance: u16 = 0;
-    while i > 0 || j > 0 {
-        if i > 0
-            && j > 0
-            && matrix[(i, j)] == matrix[(i - 1, j - 1)] + check_match(bs1[i - 1], bs2[j - 1])
-        {
-            distance += check_match(bs1[i - 1], bs2[j - 1]);
-            i -= 1;
-            j -= 1;
-        } else if i > 0 && matrix[(i, j)] == matrix[(i - 1, j)] + GAP {
-            distance += GAP;
-            i -= 1;
-        } else {
-            distance += GAP;
-            j -= 1;
-        }
-    }
-    distance
-}
-
-fn align(x: &str, y: &str) -> Matrix<u16> {
+pub fn needleman_wunsch(x: &str, y: &str) -> u16 {
     let (x_len, y_len) = (x.len(), y.len());
     let mut matrix: Matrix<u16> = Matrix::new(x_len + 1, y_len + 1);
 
@@ -141,7 +88,8 @@ fn align(x: &str, y: &str) -> Matrix<u16> {
             matrix[(i + 1, j + 1)] = min_val;
         }
     }
-    matrix
+
+    matrix[(x_len, y_len)]
 }
 
 fn check_match(b1: u8, b2: u8) -> u16 {

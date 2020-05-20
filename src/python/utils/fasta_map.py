@@ -59,24 +59,24 @@ class FastaMap:
                 data[rna_id] = rna
         return data
 
-    def _compare_all_samples(self, threads_option):
+    def _compare_all_samples(self, threads):
         print("Performing comparisons...")
         start_time = time.time()
         ids = list(self.__data.keys())
         to_compare = [(ids[i], ids[j])
                       for i in range(len(ids) - 1)
                       for j in range(i + 1, len(ids))]
-        comparisons = sq.par_compare(to_compare, self.__data, threads_option)
-        print(f"Comparisons performed in {time.time() - start_time} seconds!")
+        comparisons = sq.par_compare(to_compare, self.__data, str(threads))
+        print(f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons
 
-    def build_hierarchy(self, threads_option) -> List[Union[Tuple[Any, ...], list]]:
+    def build_hierarchy(self, threads) -> List[Union[Tuple[Any, ...], list]]:
         """
         The function that is in charge of the comparison and the hierarchy of the samples
         :param threads_option:
         :return:
         """
-        comparisons = self._compare_all_samples(threads_option)
+        comparisons = self._compare_all_samples(threads)
         table = self._to_dict(comparisons)
         levels = [tuple(table.keys())]
 
