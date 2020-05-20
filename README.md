@@ -9,7 +9,9 @@
 
 ### Install Dependencies 
 
-``` pip install -r requeriments.txt 📝```
+``` 
+pip install -r requeriments.txt 📝
+```
 
 ### ✨ Execute
 
@@ -23,7 +25,7 @@ python3 sarscovhierarchy.py <data_path>
 
 [Python Code Documentation](https://manudiv16.github.io/Covid-19-challenge)
 
-[Rust Code Documentation](https://jasterv.github.io/COVID-19-CHALLENGE)
+[Rust Code Documentation](https://jasterv.github.io/rust-covid-docs/)
 
 ## 👤 Contributors ✨
 
