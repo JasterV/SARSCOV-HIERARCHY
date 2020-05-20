@@ -9,7 +9,9 @@
 
 ### Install Dependencies 
 
-``` pip install -r requeriments.txt 📝```
+``` 
+pip install -r requeriments.txt 📝
+```
 
 ### ✨ Execute
 
