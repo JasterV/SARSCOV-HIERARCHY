@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-import src.python.libs.seqalign as sq
+import libs.seqalign as sq
 
 
 class TestFastaMap(TestCase):
@@ -14,14 +14,17 @@ class TestFastaMap(TestCase):
         seq2 = "AACG"
         expected = 2
         self.assertEqual(expected, sq.compare_samples(seq1, seq2))
+
         seq1 = "JDSLFA"
         seq2 = "JALFDSA"
         expected = 6
         self.assertEqual(expected, sq.compare_samples(seq1, seq2))
+        
         seq1 = "DSAJKJFHJAKHDIOUZVJCXMVCZIOIUOWUQRIEUWQIPIDSFSDKZXV"
         seq2 = "FKSJAFKJIOTIGHLKJVMCXXZCMVLJASIRUWQOIUTPQWURIIPOQ"
         expected = 46
         self.assertEqual(expected, sq.compare_samples(seq1, seq2))
+        
         seq1 = "KFDSKAJFJPOTIPWQUIMXZMVMZXBVM"
         seq2 = "FKDSPOIQTUITYSKZMV"
         expected = 31

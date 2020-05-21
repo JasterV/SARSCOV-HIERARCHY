@@ -7,6 +7,7 @@
 import collections
 import time
 from typing import Tuple, Dict, List, Callable, Union, Any
+from utils.process_info import ProcessInfo
 
 import libs.seqalign as sq
 
@@ -59,7 +60,13 @@ class FastaMap:
                 data[rna_id] = rna
         return data
 
-    def _compare_all_samples(self, threads):
+    def _compare_all_samples(self):
+        # Calculate the number of threads that can be
+        # used in order to speed up the comparisons
+        max_length = max(map(len, self.__data.values()))
+        num_samples = len(self.__data)
+        threads = ProcessInfo(num_samples, max_length).max_threads
+        # Start the comparisons
         print("Performing comparisons...")
         start_time = time.time()
         ids = list(self.__data.keys())
@@ -67,16 +74,17 @@ class FastaMap:
                       for i in range(len(ids) - 1)
                       for j in range(i + 1, len(ids))]
         comparisons = sq.par_compare(to_compare, self.__data, str(threads))
-        print(f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
+        print(
+            f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons
 
-    def build_hierarchy(self, threads) -> List[Union[Tuple[Any, ...], list]]:
+    def build_hierarchy(self) -> List[Union[Tuple[Any, ...], list]]:
         """
         The function that is in charge of the comparison and the hierarchy of the samples
         :param threads_option:
         :return:
         """
-        comparisons = self._compare_all_samples(threads)
+        comparisons = self._compare_all_samples()
         table = self._to_dict(comparisons)
         levels = [tuple(table.keys())]
 

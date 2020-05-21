@@ -1,11 +1,11 @@
 from unittest import TestCase
 
-from src.python.utils.csv_table import CsvTable
+from utils.csv_table import CsvTable
 
 
 class TestCsvTable(TestCase):
     def test_values(self):
-        path = "../data/data_test/sequences.csv"
+        path = "data/data_test/sequences.csv"
         accession = ["MT292569", "MT292570", "MT292571", "MT292572", "MT292574",
                      "MT292575", "MT292576", "MT292573", "MT292577", "MT292578",
                      "MT292579", "MT292580", "MT292581", "MT292582", "MT256917",
@@ -17,7 +17,7 @@ class TestCsvTable(TestCase):
         self.assertTrue(all([x in accession for x in csv_table.values("Accession")]))
 
     def test_group_countries_by_median_length(self):
-        path = "../data/data_test/sequences.csv"
+        path = "data/data_test/sequences.csv"
         row_china = {"Accession": "MT259228",
                      "Release_Date": "2020-03-30T00:00:00Z",
                      "Species": "Severe acute respiratory syndrome-related coronavirus",
@@ -39,4 +39,5 @@ class TestCsvTable(TestCase):
         list_cases_test = CsvTable(list_cases)
         csv_table = CsvTable(path)
         list_csv = csv_table.group_countries_by_median_length()
-        self.assertTrue(all(x in list_csv.table for x in list_cases_test.table))
+        self.assertTrue(all(x in list_csv._table for x in list_cases_test._table))
+

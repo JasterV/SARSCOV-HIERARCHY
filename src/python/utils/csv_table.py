@@ -6,7 +6,7 @@ from typing import List, Union, Dict
 
 from prettytable import PrettyTable
 
-import utils.select
+import utils.select as sel
 
 
 class CsvTable:
@@ -17,31 +17,27 @@ class CsvTable:
 
     def __init__(self, arg: Union[str, List[Dict]]):
         if isinstance(arg, str):
-            self.__table = self.__read(arg)
+            self._table = self.__read(arg)
         elif isinstance(arg, list):
-            self.__table = arg
+            self._table = arg
         else:
             raise TypeError("Invalid Argument")
 
     def __getitem__(self, index):
         try:
-            return self.__table[index]
+            return self._table[index]
         except:
             raise IndexError("Index out of range")
 
     def __len__(self):
-        return len(self.__table)
+        return len(self._table)
 
     def __iter__(self):
-        for row in self.__table:
+        for row in self._table:
             yield row
 
-    @property
-    def table(self):
-        return self.__table
-
     def __str__(self):
-        pretty_table = PrettyTable(list(self.__table[0].keys()))
+        pretty_table = PrettyTable(list(self._table[0].keys()))
         for row in self:
             pretty_table.add_row(row.values())
         return str(pretty_table)
@@ -68,7 +64,7 @@ class CsvTable:
         return CsvTable(filtered_data)
 
     def __get_average_row(self, values: list) -> Union[dict, List[dict]]:
-        median_value = utils.select.quick_select_median(values, index=1)
+        median_value = sel.quick_select_median(values, index=1)
         row = self[median_value[0]]
         geo_location = row['Geo_Location']
         row['Geo_Location'] = geo_location.split(":")[0] \

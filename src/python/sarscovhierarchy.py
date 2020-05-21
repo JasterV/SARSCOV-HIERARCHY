@@ -5,14 +5,8 @@ from sys import argv
 
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
-from utils.process_info import ProcessInfo
 
 signal.signal(signal.SIGTSTP, signal.SIG_IGN)
-
-
-def calculate_max_threads(max_length, num_samples):
-    piu = ProcessInfo(num_samples, max_length)
-    return piu.max_threads if piu.max_threads <= 3 else 3
 
 
 def main():
@@ -20,18 +14,14 @@ def main():
     csv_path = join(data_dir, "sequences.csv")
     fasta_path = join(data_dir, "sequences.fasta")
 
-    print("Reading and processing files...")
+    print("\nReading and processing files...")
     csv_table = CsvTable(csv_path).group_countries_by_median_length()
     ids = csv_table.values('Accession')
     fasta_map = FastaMap(fasta_path).filter(lambda item: item[0] in ids)
     print("Files processing finished!")
 
-    max_length = max(map(int, csv_table.values("Length")))
-    num_samples = len(fasta_map)
-    max_threads_to_use = calculate_max_threads(max_length, num_samples)
-
-    print("Building hierarchy...")
-    fasta_map.build_hierarchy(max_threads_to_use)
+    print("\nBuilding hierarchy...")
+    fasta_map.build_hierarchy()
     print("Done!")
 
 

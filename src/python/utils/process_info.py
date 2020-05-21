@@ -12,7 +12,7 @@ import psutil
 
 class ProcessInfo:
     """
-        informer and delimiter of system resources.
+        Calculates system resources.
     """
 
     def __init__(self, num_samples, max_length):
@@ -40,7 +40,7 @@ class ProcessInfo:
 
     @property
     def max_threads(self):
-        threads_available = self.num_logic_cores
+        threads_available = self.num_logic_cores if self.num_logic_cores <= 3 else 3
         threads = math.floor(self.mem_available / self.max_mem_per_comparison)
         max_threads = threads if threads <= threads_available else threads_available
         return max_threads if max_threads >= 1 else 1
