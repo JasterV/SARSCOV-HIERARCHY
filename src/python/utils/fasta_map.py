@@ -46,6 +46,23 @@ class FastaMap:
         """
         return FastaMap(filter(function, self))
 
+    def build_hierarchy(self) -> List[Union[Tuple[Any, ...], list]]:
+        """
+        The function that is in charge of the comparison and the hierarchy of the samples
+        :param threads_option:
+        :return:
+        """
+        comparisons = self._compare_all_samples()
+        table = self._to_dict(comparisons)
+        tree = HierarchyTree("Hierarchy Sars-Cov-2")
+
+        while len(table) > 1:
+            closest_pair = self.__find_closest_pair(table)
+            tree.add_relation(closest_pair)
+            new_relation = self.__build_relation(closest_pair, table)
+            table = self.__refactor_table(closest_pair, new_relation, table)
+        tree.show()
+
     def _read(self, file_path: str) -> Dict[str, str]:
         """
         Reads a fasta file and returns a dict where the keys are the accessions
@@ -60,7 +77,7 @@ class FastaMap:
                 rna_id, rna = self._get_rna(seq)
                 data[rna_id] = rna
         return data
-        
+
     def _compare_all_samples(self):
         # Calculate the number of threads that can be
         # used in order to speed up the comparisons
@@ -78,23 +95,6 @@ class FastaMap:
         print(
             f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons
-
-    def build_hierarchy(self) -> List[Union[Tuple[Any, ...], list]]:
-        """
-        The function that is in charge of the comparison and the hierarchy of the samples
-        :param threads_option:
-        :return:
-        """
-        comparisons = self._compare_all_samples()
-        table = self._to_dict(comparisons)
-        tree = HierarchyTree("Hierarchy Sars-Cov-2")
-
-        while len(table) > 1:
-            closest_pair = self.__find_closest_pair(table)
-            tree.add_relation(closest_pair)
-            new_relation = self.__build_relation(closest_pair, table)
-            table = self.__refactor_table(closest_pair, new_relation, table)
-        tree.show()
 
     @staticmethod
     def __build_relation(pair, table):
