@@ -2,8 +2,8 @@ from graphviz import Digraph
 
 
 class HierarchyTree:
-    def __init__(self):
-        self.__dot = Digraph("Hierarchy Sars-Cov-2")
+    def __init__(self, title):
+        self.__dot = Digraph(title)
 
     def add_relation(self, pair):
         node1, node2 = tuple(map(lambda x: str(x).translate(

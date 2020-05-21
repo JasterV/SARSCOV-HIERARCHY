@@ -87,7 +87,7 @@ class FastaMap:
         """
         comparisons = self._compare_all_samples()
         table = self._to_dict(comparisons)
-        tree = HierarchyTree()
+        tree = HierarchyTree("Hierarchy Sars-Cov-2")
 
         while len(table) > 1:
             closest_pair = self.__find_closest_pair(table)
