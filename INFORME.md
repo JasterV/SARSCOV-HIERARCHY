@@ -116,9 +116,9 @@ Per tant podem concluir en que la complexitat d'aquest algorisme es **O(N * M)**
 
 	Això és deu a la reducció del nombre de dades amb les quals s'ha de treballar al *Heap* (Zona de memòria a la qual suposa un cost elevat accedir en compariació al *Stack*), ja que és on s'emmagatzema cada matriu que es crea.
 
-	Actualment treballant amb valors del tipus **u16**, una sola comparació entre 2 mostres mitjançant alineament de seqüencies tarda entre 1 i 2 segons.
+	Actualment treballant amb valors del tipus **u16**, una sola comparació entre 2 mostres mitjançant alineament de seqüencies tarda de mitjana 1 segon.
 
-	Anteriorment, treballant amb valors del tipus **i16**, una comparació podía arribar a tardar uns 5 segons, i treballant amb valors del tipus **i64**, en un *PC* amb mínim 8 GB de RAM, podía arribar a tardar uns 10 segons.
+	Anteriorment, treballant amb valors del tipus **i16**, una comparació podía arribar a tardar uns 3.5 segons de mitjana, i treballant amb valors del tipus **i64**, en un *PC* amb mínim 8 GB de RAM, podía tardar uns 7 segons.
 
 # Classificació
 
