@@ -3,6 +3,7 @@ import signal
 from os.path import join
 from sys import argv
 
+from utils.tree import HierarchyTree
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
 
@@ -21,10 +22,21 @@ def main():
     print("Files processing finished!")
 
     labels = csv_table.dict_of('Accession', 'Geo_Location')
-    
+
     print("\nBuilding hierarchy...")
-    fasta_map.build_hierarchy(labels)
+    table_hierarchy = fasta_map.build_hierarchy()
+    show_tree(labels, table_hierarchy)
     print("Done!")
+
+
+def show_tree(labels, table_hierarchy):
+    tree = HierarchyTree(labels)
+    while len(table_hierarchy) > 1:
+        closest_pair = FastaMap.find_closest_pair(table_hierarchy)
+        tree.add_relation(closest_pair)
+        new_relation = FastaMap.build_relation(closest_pair, table_hierarchy)
+        table_hierarchy = FastaMap.refactor_table(closest_pair, new_relation, table_hierarchy)
+    tree.show()
 
 
 if __name__ == '__main__':

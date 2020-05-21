@@ -19,6 +19,6 @@ class HierarchyTree:
     def __transform(self, value):
         value = str(value).translate(
             str.maketrans({'(': '', ')': '', "'": ''}))
-        if self.__labels == None:
+        if self.__labels is None:
             return value
         return ','.join(map(lambda x: self.__labels[x.strip()], value.split(',')))

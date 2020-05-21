@@ -11,7 +11,6 @@ from typing import Tuple, Dict, Callable
 import libs.seqalign as sq
 
 from utils.process_info import ProcessInfo
-from utils.tree import HierarchyTree
 
 
 class FastaMap:
@@ -47,21 +46,14 @@ class FastaMap:
         """
         return FastaMap(filter(function, self))
 
-    def build_hierarchy(self, labels):
+    def build_hierarchy(self):
         """
         The function that is in charge of the comparison and the hierarchy of the samples
         :return None:
         """
         comparisons = self._compare_all_samples()
         table = self._to_dict(comparisons)
-        tree = HierarchyTree(labels)
-
-        while len(table) > 1:
-            closest_pair = self.__find_closest_pair(table)
-            tree.add_relation(closest_pair)
-            new_relation = self.__build_relation(closest_pair, table)
-            table = self.__refactor_table(closest_pair, new_relation, table)
-        tree.show()
+        return table
 
     def _read(self, file_path: str) -> Dict[str, str]:
         """
@@ -91,13 +83,13 @@ class FastaMap:
         to_compare = [(ids[i], ids[j])
                       for i in range(len(ids) - 1)
                       for j in range(i + 1, len(ids))]
-        comparisons = sq.par_compare(to_compare, self.__data, str(threads))
+        comparisons = sq.par_compare(to_compare, self.__data, str(6))
         print(
             f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons
 
     @staticmethod
-    def __build_relation(pair, table):
+    def build_relation(pair, table):
         relation = dict()
         for elem in pair:
             for key, value in table[elem].items():
@@ -107,7 +99,7 @@ class FastaMap:
         return relation
 
     @staticmethod
-    def __refactor_table(pair, relation, table):
+    def refactor_table(pair, relation, table):
         new_table = dict()
         new_table[pair] = relation
         for id1, value in table.items():
@@ -118,7 +110,7 @@ class FastaMap:
         return new_table
 
     @staticmethod
-    def __find_closest_pair(table):
+    def find_closest_pair(table):
         closest_pairs = list()
         for key, value in table.items():
             closest_id, distance = min(value.items(), key=lambda x: x[-1])
