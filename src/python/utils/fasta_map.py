@@ -8,6 +8,7 @@ import collections
 import time
 from typing import Tuple, Dict, List, Callable, Union, Any
 from utils.process_info import ProcessInfo
+from utils.tree import HierarchyTree
 
 import libs.seqalign as sq
 
@@ -59,7 +60,7 @@ class FastaMap:
                 rna_id, rna = self._get_rna(seq)
                 data[rna_id] = rna
         return data
-
+        
     def _compare_all_samples(self):
         # Calculate the number of threads that can be
         # used in order to speed up the comparisons
@@ -86,13 +87,14 @@ class FastaMap:
         """
         comparisons = self._compare_all_samples()
         table = self._to_dict(comparisons)
-        levels = [tuple(table.keys())]
+        tree = HierarchyTree()
 
         while len(table) > 1:
             closest_pair = self.__find_closest_pair(table)
+            tree.add_relation(closest_pair)
             new_relation = self.__build_relation(closest_pair, table)
             table = self.__refactor_table(closest_pair, new_relation, table)
-            levels.append(list(table.keys()))
+        tree.show()
 
     @staticmethod
     def __build_relation(pair, table):
