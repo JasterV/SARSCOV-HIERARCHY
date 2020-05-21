@@ -1,0 +1,67 @@
+graph "Hierarchy Sars-Cov-2" {
+	node [shape=plaintext]
+	"Japan,Hong Kong" -- Japan
+	"Japan,Hong Kong" -- "Hong Kong"
+	"Japan,Hong Kong,Brazil" -- "Japan,Hong Kong"
+	"Japan,Hong Kong,Brazil" -- Brazil
+	"Japan,Hong Kong,Brazil,South Korea" -- "Japan,Hong Kong,Brazil"
+	"Japan,Hong Kong,Brazil,South Korea" -- "South Korea"
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan" -- "Japan,Hong Kong,Brazil,South Korea"
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan" -- Pakistan
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam" -- "Japan,Hong Kong,Brazil,South Korea,Pakistan"
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam" -- "Viet Nam"
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden" -- "Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam"
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden" -- Sweden
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan" -- "Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden"
+	"Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan" -- Taiwan
+	"South Africa,Greece" -- "South Africa"
+	"South Africa,Greece" -- Greece
+	"Malaysia,Thailand" -- Malaysia
+	"Malaysia,Thailand" -- Thailand
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan" -- "South Africa,Greece"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan" -- "Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland" -- "South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland" -- Finland
+	"Spain,Colombia" -- Spain
+	"Spain,Colombia" -- Colombia
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France" -- "South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France" -- France
+	"India,Nepal" -- India
+	"India,Nepal" -- Nepal
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey" -- "South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey" -- Turkey
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel" -- "South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel" -- Israel
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown" -- "South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel"
+	"South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown" -- Unknown
+	"India,Nepal,Peru" -- "India,Nepal"
+	"India,Nepal,Peru" -- Peru
+	"India,Nepal,Peru,China" -- "India,Nepal,Peru"
+	"India,Nepal,Peru,China" -- China
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown" -- "India,Nepal,Peru,China"
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown" -- "South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown"
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA" -- "India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown"
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA" -- USA
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia" -- "India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA"
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia" -- "Spain,Colombia"
+	"Nigeria,Australia" -- Nigeria
+	"Nigeria,Australia" -- Australia
+	"Malaysia,Thailand,Italy" -- "Malaysia,Thailand"
+	"Malaysia,Thailand,Italy" -- Italy
+	"Malaysia,Thailand,Italy,Iran" -- "Malaysia,Thailand,Italy"
+	"Malaysia,Thailand,Italy,Iran" -- Iran
+	"Malaysia,Thailand,Italy,Iran,Philippines" -- "Malaysia,Thailand,Italy,Iran"
+	"Malaysia,Thailand,Italy,Iran,Philippines" -- Philippines
+	"Nigeria,Australia,Tunisia" -- "Nigeria,Australia"
+	"Nigeria,Australia,Tunisia" -- Tunisia
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines" -- "Nigeria,Australia,Tunisia"
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines" -- "Malaysia,Thailand,Italy,Iran,Philippines"
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq" -- "Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines"
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq" -- Iraq
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia,Serbia" -- "India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia"
+	"India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia,Serbia" -- Serbia
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq,Belgium" -- "Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq"
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq,Belgium" -- Belgium
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq,Belgium,India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia,Serbia" -- "Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq,Belgium"
+	"Nigeria,Australia,Tunisia,Malaysia,Thailand,Italy,Iran,Philippines,Iraq,Belgium,India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia,Serbia" -- "India,Nepal,Peru,China,South Africa,Greece,Japan,Hong Kong,Brazil,South Korea,Pakistan,Viet Nam,Sweden,Taiwan,Finland,France,Turkey,Israel,Unknown,USA,Spain,Colombia,Serbia"
+}

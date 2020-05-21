@@ -47,16 +47,14 @@ class FastaMap:
         """
         return FastaMap(filter(function, self))
 
-    def build_hierarchy(self, by_id=None) -> None:
+    def build_hierarchy(self, labels):
         """
         The function that is in charge of the comparison and the hierarchy of the samples
         :return None:
         """
-        if by_id is None:
-            by_id = {}
-        comparisons = self._compare_all_samples(by_id)
+        comparisons = self._compare_all_samples()
         table = self._to_dict(comparisons)
-        tree = HierarchyTree()
+        tree = HierarchyTree(labels)
 
         while len(table) > 1:
             closest_pair = self.__find_closest_pair(table)
@@ -80,7 +78,7 @@ class FastaMap:
                 data[rna_id] = rna if len(rna) < 1000 else rna[:1000]
         return data
 
-    def _compare_all_samples(self, csv_table):
+    def _compare_all_samples(self):
         # Calculate the number of threads that can be
         # used in order to speed up the comparisons
         max_length = max(map(len, self.__data.values()))
@@ -94,9 +92,6 @@ class FastaMap:
                       for i in range(len(ids) - 1)
                       for j in range(i + 1, len(ids))]
         comparisons = sq.par_compare(to_compare, self.__data, str(threads))
-        if csv_table:
-            comparisons = [(csv_table[id1]["Geo_Location"], csv_table[id2]["Geo_Location"], result)
-                           for id1, id2, result in comparisons]
         print(
             f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons

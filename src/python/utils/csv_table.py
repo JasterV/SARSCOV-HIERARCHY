@@ -49,6 +49,12 @@ class CsvTable:
         """
         return [row[column] for row in self]
 
+    def dict_of(self, key, value):
+        try:
+            return dict(zip(self.values(key), self.values(value)))
+        except:
+            print("KeyError")
+
     def group_countries_by_median_length(self):
         """
         Filters the csv by country for average length's
@@ -71,9 +77,6 @@ class CsvTable:
             if len(geo_location) > 0 \
             else "Unknown"
         return row
-
-    def dict_by_id(self):
-        return {elem["Accession"]: elem for elem in self._table}
 
     @staticmethod
     def __read(file_path: str) -> List[Dict]:

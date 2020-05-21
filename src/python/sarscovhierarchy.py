@@ -18,11 +18,12 @@ def main():
     csv_table = CsvTable(csv_path).group_countries_by_median_length()
     ids = csv_table.values('Accession')
     fasta_map = FastaMap(fasta_path).filter(lambda item: item[0] in ids)
-    csv_table = csv_table.dict_by_id()
     print("Files processing finished!")
 
+    labels = csv_table.dict_of('Accession', 'Geo_Location')
+    
     print("\nBuilding hierarchy...")
-    fasta_map.build_hierarchy(csv_table)
+    fasta_map.build_hierarchy(labels)
     print("Done!")
 
 

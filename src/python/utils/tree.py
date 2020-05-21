@@ -2,15 +2,21 @@ from graphviz import Graph
 
 
 class HierarchyTree:
-    def __init__(self):
-        self.__dot = Graph("Hierarchy Sars-Cov-2", format='svg')
+    def __init__(self, labels):
+        self.__dot = Graph("Hierarchy Sars-Cov-2", format='png',
+                           node_attr={'shape': 'plaintext'})
+        self.__labels = labels
 
     def add_relation(self, pair):
-        node1, node2 = tuple(map(lambda x: str(x).translate(
-            str.maketrans({'(': '', ')': '', "'": ''})), pair))
-        new_node = f"{node1}, {node2}"
-        self.__dot.edge(node1, new_node)
-        self.__dot.edge(node2, new_node)
+        node1, node2 = tuple(map(self.__transform, pair))
+        new_node = f"{node1},{node2}"
+        self.__dot.edge(new_node, node1)
+        self.__dot.edge(new_node, node2)
 
     def show(self):
         self.__dot.render("hierarchy")
+
+    def __transform(self, value):
+        value = str(value).translate(
+            str.maketrans({'(': '', ')': '', "'": ''}))
+        return ','.join(map(lambda x: self.__labels[x.strip()], value.split(',')))
