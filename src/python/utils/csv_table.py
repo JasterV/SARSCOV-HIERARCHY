@@ -28,6 +28,7 @@ class CsvTable:
             return self._table[index]
         except IndexError:
             print("Index out of range")
+            raise IndexError
 
     def __len__(self):
         return len(self._table)
@@ -47,13 +48,16 @@ class CsvTable:
         :param column:
         :return List of values for this column:
         """
-        return [row[column] for row in self]
+        try:
+            return [row[column] for row in self]
+        except:
+            raise KeyError
 
     def dict_of(self, key, value):
         try:
             return dict(zip(self.values(key), self.values(value)))
         except:
-            print("KeyError")
+            raise KeyError
 
     def group_countries_by_median_length(self):
         """
