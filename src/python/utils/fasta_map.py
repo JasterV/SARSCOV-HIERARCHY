@@ -6,11 +6,12 @@
 """
 import collections
 import time
-from typing import Tuple, Dict, List, Callable, Union, Any
-from utils.process_info import ProcessInfo
-from utils.tree import HierarchyTree
+from typing import Tuple, Dict, Callable
 
 import libs.seqalign as sq
+
+from utils.process_info import ProcessInfo
+from utils.tree import HierarchyTree
 
 
 class FastaMap:
@@ -46,15 +47,16 @@ class FastaMap:
         """
         return FastaMap(filter(function, self))
 
-    def build_hierarchy(self) -> List[Union[Tuple[Any, ...], list]]:
+    def build_hierarchy(self, by_id=None) -> None:
         """
         The function that is in charge of the comparison and the hierarchy of the samples
-        :param threads_option:
-        :return:
+        :return None:
         """
-        comparisons = self._compare_all_samples()
+        if by_id is None:
+            by_id = {}
+        comparisons = self._compare_all_samples(by_id)
         table = self._to_dict(comparisons)
-        tree = HierarchyTree("Hierarchy Sars-Cov-2")
+        tree = HierarchyTree()
 
         while len(table) > 1:
             closest_pair = self.__find_closest_pair(table)
@@ -75,10 +77,10 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna
+                data[rna_id] = rna if len(rna) < 1000 else rna[:1000]
         return data
 
-    def _compare_all_samples(self):
+    def _compare_all_samples(self, csv_table):
         # Calculate the number of threads that can be
         # used in order to speed up the comparisons
         max_length = max(map(len, self.__data.values()))
@@ -92,6 +94,9 @@ class FastaMap:
                       for i in range(len(ids) - 1)
                       for j in range(i + 1, len(ids))]
         comparisons = sq.par_compare(to_compare, self.__data, str(threads))
+        if csv_table:
+            comparisons = [(csv_table[id1]["Geo_Location"], csv_table[id2]["Geo_Location"], result)
+                           for id1, id2, result in comparisons]
         print(
             f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons

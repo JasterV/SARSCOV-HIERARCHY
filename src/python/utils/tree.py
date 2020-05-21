@@ -1,9 +1,9 @@
-from graphviz import Digraph
+from graphviz import Graph
 
 
 class HierarchyTree:
-    def __init__(self, title):
-        self.__dot = Digraph(title)
+    def __init__(self):
+        self.__dot = Graph("Hierarchy Sars-Cov-2", format='svg')
 
     def add_relation(self, pair):
         node1, node2 = tuple(map(lambda x: str(x).translate(
@@ -13,4 +13,4 @@ class HierarchyTree:
         self.__dot.edge(node2, new_node)
 
     def show(self):
-        self.__dot.render("hierarchy.gv")
+        self.__dot.render("hierarchy")

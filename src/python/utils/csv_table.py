@@ -26,8 +26,8 @@ class CsvTable:
     def __getitem__(self, index):
         try:
             return self._table[index]
-        except:
-            raise IndexError("Index out of range")
+        except IndexError:
+            print("Index out of range")
 
     def __len__(self):
         return len(self._table)
@@ -71,6 +71,9 @@ class CsvTable:
             if len(geo_location) > 0 \
             else "Unknown"
         return row
+
+    def dict_by_id(self):
+        return {elem["Accession"]: elem for elem in self._table}
 
     @staticmethod
     def __read(file_path: str) -> List[Dict]:

@@ -5,7 +5,7 @@ from utils.csv_table import CsvTable
 
 class TestCsvTable(TestCase):
     def test_values(self):
-        path = "data/data_test/sequences.csv"
+        path = "../data/data_test/sequences.csv"
         accession = ["MT292569", "MT292570", "MT292571", "MT292572", "MT292574",
                      "MT292575", "MT292576", "MT292573", "MT292577", "MT292578",
                      "MT292579", "MT292580", "MT292581", "MT292582", "MT256917",
@@ -17,7 +17,7 @@ class TestCsvTable(TestCase):
         self.assertTrue(all([x in accession for x in csv_table.values("Accession")]))
 
     def test_group_countries_by_median_length(self):
-        path = "data/data_test/sequences.csv"
+        path = "../data/data_test/sequences.csv"
         row_china = {"Accession": "MT259228",
                      "Release_Date": "2020-03-30T00:00:00Z",
                      "Species": "Severe acute respiratory syndrome-related coronavirus",
