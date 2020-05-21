@@ -2,19 +2,29 @@ from graphviz import Graph
 
 
 class HierarchyTree:
-    def __init__(self, labels=None):
+    def __init__(self, table, labels=None):
         self.__dot = Graph("Hierarchy Sars-Cov-2",
                            node_attr={'shape': 'plaintext'})
+        self.__table = table
         self.__labels = labels
 
-    def add_relation(self, pair):
+    def build_tree(self):
+        hierarchy_table = self.__table
+        while len(hierarchy_table) > 1:
+            closest_pair = self.find_closest_pair(hierarchy_table)
+            self._add_relation(closest_pair)
+            new_relation = self.build_relation(closest_pair, hierarchy_table)
+            hierarchy_table = self.refactor_table(
+                closest_pair, new_relation, hierarchy_table)
+
+    def show(self):
+        self.__dot.render("hierarchy")
+
+    def _add_relation(self, pair):
         node1, node2 = tuple(map(self.__transform, pair))
         new_node = f"{node1},{node2}"
         self.__dot.edge(new_node, node1)
         self.__dot.edge(new_node, node2)
-
-    def show(self):
-        self.__dot.render("hierarchy")
 
     def __transform(self, value):
         value = str(value).translate(
@@ -52,11 +62,3 @@ class HierarchyTree:
                                   if id2 not in pair}
                 new_table[id1][pair] = relation[id1]
         return new_table
-
-    def show_tree(self, table_hierarchy):
-        while len(table_hierarchy) > 1:
-            closest_pair = HierarchyTree.find_closest_pair(table_hierarchy)
-            self.add_relation(closest_pair)
-            new_relation = HierarchyTree.build_relation(closest_pair, table_hierarchy)
-            table_hierarchy = HierarchyTree.refactor_table(closest_pair, new_relation, table_hierarchy)
-        self.show()

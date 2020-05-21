@@ -24,9 +24,10 @@ def main():
     labels = csv_table.dict_of('Accession', 'Geo_Location')
 
     print("\nBuilding hierarchy...")
-    table_hierarchy = fasta_map.build_hierarchy()
-    tree = HierarchyTree(labels)
-    tree.show_tree(table_hierarchy)
+    distances_table = fasta_map.compare_all_samples()
+    tree = HierarchyTree(distances_table, labels)
+    tree.build_tree()
+    tree.show()
     print("Done!")
 
 

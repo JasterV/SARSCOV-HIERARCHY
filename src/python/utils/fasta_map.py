@@ -46,7 +46,7 @@ class FastaMap:
         """
         return FastaMap(filter(function, self))
 
-    def build_hierarchy(self):
+    def compare_all_samples(self):
         """
         The function that is in charge of the comparison and the hierarchy of the samples
         :return None:
@@ -83,7 +83,7 @@ class FastaMap:
         to_compare = [(ids[i], ids[j])
                       for i in range(len(ids) - 1)
                       for j in range(i + 1, len(ids))]
-        comparisons = sq.par_compare(to_compare, self.__data, str(6))
+        comparisons = sq.par_compare(to_compare, self.__data, str(threads))
         print(
             f"Comparisons performed in {time.time() - start_time:.3f} seconds!")
         return comparisons
