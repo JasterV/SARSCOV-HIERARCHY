@@ -89,36 +89,6 @@ class FastaMap:
         return comparisons
 
     @staticmethod
-    def build_relation(pair, table):
-        relation = dict()
-        for elem in pair:
-            for key, value in table[elem].items():
-                if key not in pair:
-                    relation.setdefault(key, []).append(value)
-        relation = {key: min(relation[key]) for key in relation}
-        return relation
-
-    @staticmethod
-    def refactor_table(pair, relation, table):
-        new_table = dict()
-        new_table[pair] = relation
-        for id1, value in table.items():
-            if id1 not in pair:
-                new_table[id1] = {id2: distance for id2, distance in value.items()
-                                  if id2 not in pair}
-                new_table[id1][pair] = relation[id1]
-        return new_table
-
-    @staticmethod
-    def find_closest_pair(table):
-        closest_pairs = list()
-        for key, value in table.items():
-            closest_id, distance = min(value.items(), key=lambda x: x[-1])
-            closest_pairs.append((key, closest_id, distance))
-        sample1, sample2, _ = min(closest_pairs, key=lambda x: x[-1])
-        return sample1, sample2
-
-    @staticmethod
     def _to_dict(comparisons):
         sample_compare = dict()
         for id1, id2, distance in comparisons:
