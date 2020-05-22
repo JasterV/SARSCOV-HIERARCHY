@@ -2,6 +2,7 @@ import os
 import signal
 from os.path import join
 from sys import argv
+from zipfile import ZipFile
 
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
