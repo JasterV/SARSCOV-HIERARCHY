@@ -24,17 +24,10 @@ class HierarchyTree:
         t = Tree(tuple_repr + ";")
         ts = TreeStyle()
         ts.show_leaf_name = True
-<<<<<<< HEAD
         ts.mode = "c"
         ts.arc_start = -180  # 0 degrees = 3 o'clock
         ts.arc_span = 180
         print(t)
-=======
-        ts.branch_vertical_margin = 10
-        ts.scale = 120
-        t.show(tree_style=ts)
-
->>>>>>> 0627ef71c70927e6f428f74bfa0f0f45af6bfb94
 
     @staticmethod
     def find_closest_pair(table):
