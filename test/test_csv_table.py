@@ -17,7 +17,7 @@ class TestCsvTable(TestCase):
         self.assertTrue(all([x in accession for x in csv_table.values("Accession")]))
 
     def test_group_countries_by_median_length(self):
-        path = "../data/data_test/sequences.csv"
+        path = "data_test/sequences.csv"
         row_china = {"Accession": "MT259228",
                      "Release_Date": "2020-03-30T00:00:00Z",
                      "Species": "Severe acute respiratory syndrome-related coronavirus",
