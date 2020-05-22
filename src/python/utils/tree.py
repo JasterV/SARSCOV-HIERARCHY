@@ -17,20 +17,15 @@ class HierarchyTree:
         self._show_tree(str(closest_pair))
 
     def _show_tree(self, tuple_repr):
+        for key in self.__labels:
+            tuple_repr = tuple_repr.replace(key, self.__labels[key])
         t = Tree(tuple_repr + ";")
         ts = TreeStyle()
         ts.show_leaf_name = True
-        ts.mode = "c"
-        ts.arc_start = -180  # 0 degrees = 3 o'clock
-        ts.arc_span = 180
-        t.render("hierarchy.png", tree_style=ts)
+        ts.branch_vertical_margin = 10
+        ts.scale = 120
+        t.show(tree_style=ts)
 
-    def __transform(self, value):
-        value = str(value).translate(
-            str.maketrans({'(': '', ')': '', "'": ''}))
-        if self.__labels is None:
-            return value
-        return ','.join(map(lambda x: self.__labels[x.strip()], value.split(',')))
 
     @staticmethod
     def find_closest_pair(table):
