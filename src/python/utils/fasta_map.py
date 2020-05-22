@@ -105,5 +105,5 @@ class FastaMap:
         """
         lines = genome_info_str.split('\n')
         header, genome = lines[0], ''.join(lines[1:])
-        genome_id = header.split('|')[0].strip()
+        genome_id = header.split('|')[0].strip().split(".")[0]
         return genome_id, genome

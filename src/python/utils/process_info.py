@@ -40,7 +40,7 @@ class ProcessInfo:
 
     @property
     def max_threads(self):
-        threads_available = self.num_logic_cores if self.num_logic_cores <= 3 else 3
+        threads_available = self.num_logic_cores if self.num_logic_cores <= 4 else 4
         threads = math.floor(self.mem_available / self.max_mem_per_comparison)
         max_threads = threads if threads <= threads_available else threads_available
         return max_threads if max_threads >= 1 else 1

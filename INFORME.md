@@ -118,7 +118,7 @@ Per tant podem concluir en que la complexitat d'aquest algorisme es **O(N * M)**
 
 	Això és deu a la reducció del nombre de dades amb les quals s'ha de treballar al *Heap* (Zona de memòria a la qual suposa un cost elevat accedir en compariació al *Stack*), ja que és on s'emmagatzema cada matriu que es crea.
 
-	Actualment treballant amb valors del tipus **u16**, una sola comparació entre 2 mostres mitjançant alineament de seqüencies tarda de mitjana 1 segon.
+	Actualment treballant amb valors del tipus **u16**, una sola comparació entre 2 mostres mitjançant alineament de seqüencies tarda de mitjana 1.5 segon.
 
 	Anteriorment, treballant amb valors del tipus **i16**, una comparació podía arribar a tardar uns 3.5 segons de mitjana, i treballant amb valors del tipus **i64**, en un *PC* amb mínim 8 GB de RAM, podía tardar uns 7 segons.
 
@@ -136,7 +136,7 @@ El procediment es senzill:
 
 Podem veure el procediment de manera gràfica seguint aquest [link](https://people.revoledu.com/kardi/tutorial/Clustering/Numerical%20Example.htm).
 
-Pel que fa a l'obtenció de les distancies entre mostres, ens basem en l'algoritme d'alineament de seqüencies analitzat en l'apartat anterior i, simplement, comparem les seqüencies totes entre totes (Si acabem tenint 33 mostres després de realitzar el 'filtrat' del primer apartat, acabem realitzant 528 comparacions).
+Pel que fa a l'obtenció de les distancies entre mostres, ens basem en l'algoritme d'alineament de seqüencies analitzat en l'apartat anterior i, simplement, comparem les seqüencies totes entre totes (Si acabem tenint 44 mostres després de realitzar el 'filtrat' del primer apartat, acabem realitzant 946 comparacions).
 
 Aquest últim pas també l'hem implementat amb *Rust* i aquesta vegada el motiu va més enllà de la gestió de la memòria.
 
@@ -157,7 +157,7 @@ Per tant, la complexitat final d'aquest algoritme és:
 
 Degut a les optimitzacions que comentem en l'apartat anterior pel que fa a la memòria que ocupa una comparació, hem volgut experimentar realitzant multi-processament i el resultat es simplement espectacular.
 
-Si una sola comparació tarda de mitjana 1 segon, processar 528 comparacions tarda al voltant de 500 segons (uns 550 més aviat). Ara bé, i si realitzem més d'una comparació a l'hora?
+Si una sola comparació tarda de mitjana 1.5 segons, processar 946 comparacions tarda al voltant de 1400 segons. Ara bé, i si realitzem més d'una comparació a l'hora?
 
 Mitjançant el poder de la llibreria **Rayon** de *Rust* hem implementat d'una manera molt senzilla un sistema concurrent per a realitzar més d'una comparació a l'hora. *Rayon* ens ofereix mètodes com *par_iter* el qual ens retorna un iterable que dividirà les tasques a executar en diferents *threads*, i sobre aquest podem utilitzar qualsevol funció que utilitzaríem sobre un iterable comú.
 
@@ -171,16 +171,16 @@ v.par_iter().map(|s1, s2| {
 
 Sóm conscients que no podem utilitzar aquest mètode per a qualsevol *PC* ja que es pot produir un error en quant a espai disponible en memòria.
 
-Per a solventar aquesta problemàtica, comprobem la memoria disponible del sistema gràcies a la llibreria *psutils* i, havent calculat prèviament l'espai màxim que pot ocupar realitzar una comparació, calculem el nombre de *threads* màxims que s'haurien d'utilitzar. Per seguretat hem assignat el valor màxim de *threads* a 3 ja que ja ens dona uns resultats extraordinàriament bons.
+Per a solventar aquesta problemàtica, comprobem la memoria disponible del sistema gràcies a la llibreria *psutils* i, havent calculat prèviament l'espai màxim que pot ocupar realitzar una comparació, calculem el nombre de *threads* màxims que s'haurien d'utilitzar. Per seguretat hem assignat el valor màxim de *threads* a 4 degut a que ja ens dona uns resultats extraordinàriament bons.
 
 Nosaltres hem pogut testejar el rendiment d'aquesta millora amb un *PC* de fins a 6 *threads* i els resultats han sigut els següents:
 
-	+ 1 THREADS: 550 segons aprox.
-	+ 2 THREADS: 250 segons aprox.
-	+ 3 THREADS: 200 segons aprox.
-	+ 4 THREADS: 160 segons aprox.
-	+ 5 THREADS: 150 segons aprox.
-	+ 6 THREADS: 130 segons aprox.
+	+ 1 THREADS: 1400 segons aprox.
+	+ 2 THREADS: 693 segons aprox.
+	+ 3 THREADS: 500 segons aprox.
+	+ 4 THREADS: 390 segons aprox.
+	+ 5 THREADS: 340 segons aprox.
+	+ 6 THREADS: 300 segons aprox.
 
 
 
