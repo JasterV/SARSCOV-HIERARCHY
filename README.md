@@ -15,6 +15,9 @@ pip install -r requeriments.txt 📝
 
 ### ✨ Execute
 
+From the [NCBI official database]() download the sequences.fasta and sequences.csv files and you are ready to try this project!
+
+
 ```
 cd src/python
   
