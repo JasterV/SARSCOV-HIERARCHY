@@ -1,30 +1,29 @@
-from graphviz import Graph
+from ete3 import Tree, TreeStyle
 
 
 class HierarchyTree:
     def __init__(self, table, labels=None):
-        self.__dot = Graph("Hierarchy Sars-Cov-2",
-                           node_attr={'shape': 'plaintext'})
         self.__table = table
         self.__labels = labels
 
     def build_tree(self):
         hierarchy_table = self.__table
+        closest_pair = tuple()
         while len(hierarchy_table) > 1:
             closest_pair = self.find_closest_pair(hierarchy_table)
-            self._add_relation(closest_pair)
             new_relation = self.build_relation(closest_pair, hierarchy_table)
             hierarchy_table = self.refactor_table(
                 closest_pair, new_relation, hierarchy_table)
+        self._show_tree(str(closest_pair))
 
-    def show(self):
-        self.__dot.render("../../output/hierarchy")
-
-    def _add_relation(self, pair):
-        node1, node2 = tuple(map(self.__transform, pair))
-        new_node = f"{node1},{node2}"
-        self.__dot.edge(new_node, node1)
-        self.__dot.edge(new_node, node2)
+    def _show_tree(self, tuple_repr):
+        t = Tree(tuple_repr + ";")
+        ts = TreeStyle()
+        ts.show_leaf_name = True
+        ts.mode = "c"
+        ts.arc_start = -180  # 0 degrees = 3 o'clock
+        ts.arc_span = 180
+        t.render("hierarchy.png", tree_style=ts)
 
     def __transform(self, value):
         value = str(value).translate(

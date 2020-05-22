@@ -2,7 +2,6 @@ import os
 import signal
 from os.path import join
 from sys import argv
-from zipfile import ZipFile
 
 from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
@@ -27,7 +26,6 @@ def main():
     distances_table = fasta_map.compare_all_samples()
     tree = HierarchyTree(distances_table, labels)
     tree.build_tree()
-    tree.show()
     print("Done!")
 
 
