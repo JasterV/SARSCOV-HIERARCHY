@@ -18,7 +18,7 @@ class HierarchyTree:
                 closest_pair, new_relation, hierarchy_table)
 
     def show(self):
-        self.__dot.render("hierarchy")
+        self.__dot.render("../../output/hierarchy")
 
     def _add_relation(self, pair):
         node1, node2 = tuple(map(self.__transform, pair))
