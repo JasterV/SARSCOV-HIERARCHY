@@ -20,6 +20,7 @@ def main():
     ids = csv_table.values('Accession')
     fasta_map = FastaMap(fasta_path).filter(lambda item: item[0] in ids)
     print("Files processing finished!")
+    
     labels = csv_table.dict_of('Accession', 'Geo_Location')
     print("\nBuilding hierarchy...")
     distances_table = fasta_map.compare_all_samples()
