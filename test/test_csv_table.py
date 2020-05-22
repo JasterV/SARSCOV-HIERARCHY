@@ -5,7 +5,7 @@ from utils.csv_table import CsvTable
 
 class TestCsvTable(TestCase):
     def test_values(self):
-        path = "../data/data_test/sequences.csv"
+        path = "data_test/sequences.csv"
         accession = ["MT292569", "MT292570", "MT292571", "MT292572", "MT292574",
                      "MT292575", "MT292576", "MT292573", "MT292577", "MT292578",
                      "MT292579", "MT292580", "MT292581", "MT292582", "MT256917",
