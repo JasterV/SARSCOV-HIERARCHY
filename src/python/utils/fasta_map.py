@@ -67,7 +67,7 @@ class FastaMap:
             sequences = filter(None, fasta.read().split('>'))
             for seq in sequences:
                 rna_id, rna = self._get_rna(seq)
-                data[rna_id] = rna
+                data[rna_id] = rna if len(rna) < 1000 else rna[:1000]
         return data
 
     def _compare_all_samples(self):

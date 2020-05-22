@@ -1,7 +1,6 @@
 from ete3 import Tree, TreeStyle
 from os import environ
 
-environ['QT_QPA_PLATFORM']='offscreen'
 
 class HierarchyTree:
     def __init__(self, table, labels=None):
@@ -16,17 +15,12 @@ class HierarchyTree:
             new_relation = self.build_relation(closest_pair, hierarchy_table)
             hierarchy_table = self.refactor_table(
                 closest_pair, new_relation, hierarchy_table)
-        self._show_tree(str(closest_pair))
+        self._show_tree(f"({closest_pair})")
 
     def _show_tree(self, tuple_repr):
         for key in self.__labels:
             tuple_repr = tuple_repr.replace(key, self.__labels[key])
         t = Tree(tuple_repr + ";")
-        ts = TreeStyle()
-        ts.show_leaf_name = True
-        ts.mode = "c"
-        ts.arc_start = -180  # 0 degrees = 3 o'clock
-        ts.arc_span = 180
         print(t)
 
     @staticmethod
@@ -36,7 +30,7 @@ class HierarchyTree:
             closest_id, distance = min(value.items(), key=lambda x: x[-1])
             closest_pairs.append((key, closest_id, distance))
         sample1, sample2, _ = min(closest_pairs, key=lambda x: x[-1])
-        return sample1, sample2
+        return sample2, sample1
 
     @staticmethod
     def build_relation(pair, table):
