@@ -7,6 +7,7 @@ from utils.csv_table import CsvTable
 from utils.fasta_map import FastaMap
 from utils.tree import HierarchyTree
 
+
 signal.signal(signal.SIGTSTP, signal.SIG_IGN)
 
 
