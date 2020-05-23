@@ -1,5 +1,4 @@
-from ete3 import Tree, TreeStyle
-from os import environ
+from ete3 import Tree
 
 
 class HierarchyTree:

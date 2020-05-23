@@ -2,7 +2,20 @@
 
 La majoría de parts d'aquest projecte estan desenvolupades amb Python. Per a la part de l'alineament de seqüencies hem utilitzat el llenguatje Rust implementant també multiprocessament per a fer més ràpida l'execució.
 
-Podeu trobar la documentació tant del codi de Python com de Rust al link que trobareu al fitxer readme del repositori.
+Podeu trobar la documentació tant del codi de Python com de Rust al link que trobareu al fitxer readme del [repositori](https://github.com/JasterV/COVID-19-CHALLENGE).
+
+# Execució del programa
+
+Per a poder executar aquest projecte es necessari importar els fitxers sequences.csv i sequences.fasta. Per a facilitar aquest procés hem inclòs a la carpeta *resources* un zip amb els fitxers els quals s'han realitzat les probes.
+
+Seguidament es necessita instalar les dependencies especificades al fitxer requeriments.txt i ja queda tot preparat per a l'execució.
+
+Es requereix una versió de python igual o superior a la 3.6.
+
+```
+pip install -r requeriments.txt 
+python src/main/sarscovhierarchy.py <directori_data>
+```
 
 # Preprocessament
 
@@ -52,20 +65,20 @@ Aquesta part del projecte l'hem implementat amb Rust. El motiu d'aquest canvi de
 
 ## Algoritme Needleman Wunsch
 
-L'algoritme que hem escollit és ni més ni menys que el famós algoritme de *[Needleman Wunsch](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm)*.
-Tot i que no és molt complex si parlem de la seva implementació, resulta tenir un cost molt elevat tant de memòria com d'execució degut a com tracta les dades.
+Per a implementar aquesta part del projecte hem escollit l'algoritme de *[Needleman Wunsch](https://en.wikipedia.org/wiki/Needleman%E2%80%93Wunsch_algorithm)*.
+Tot i que no és molt complex en quant a procediment, resulta tenir un cost molt elevat tant en memòria com en temps d'execució degut a com tracta les dades.
 
-Es planteja com a objectiu calcular la distancia entre 2 seqüencies i es segueixen els següents passos:
+L'objectiu final es basa en calcular la distancia entre 2 seqüencies. Per conseguir-ho, l'algoritme mencionat anteriorment realitza els següents passos:
 
 + Defineix 3 valors per a les següents situacions: GAP (Cal afegir o eliminar un simbol), MISMATCH (2 simbols són diferents) i MATCH (2 símbols són iguals). En el nostre cas el valor per a MATCH es 0, MISMATCH 1 i GAP 2.
 
 + Crea una matriu *(N + 1) * (M + 1)* on N i M representen la llargada de cada seqüencia. 
 
-+ Recorre la primera fira i la primera columna de la matriu contant cada casella com un GAP.
++ Recorre la primera fila i columna de la matriu contant cada casella com un GAP.
 
 + Recorre la resta de la matriu (N * M caselles) comparant així cada símbol de la 1a seqüencia amb cadascún de la 2a.
 
-	Introdueix en cada casella el valor òptim (o mínim) a col·locar a partir dels anteriors de la següent manera:
+	Introdueix en cada casella el valor òptim a col·locar a partir dels anteriors de la següent manera:
 ``` Rust
 	// c1 i c2 son els simbols a comparar
 	// check_match retorna 0 si c1 i c2 són iguals o 1 si son diferents
@@ -76,13 +89,13 @@ Es planteja com a objectiu calcular la distancia entre 2 seqüencies i es seguei
 	matrix[(i + 1, j + 1)] = min_val;
 ```
 
-Aquest algoritme es basa en *programació dinàmica*. Diem això ja que per a trobar el resultat final, primer necessitem trobar el resultat de tots els possibles casos anteriors travessant tota la matriu. Afrontem el problema que es planteja (trobar el resultat per a *N * M* caselles), trobant primer el resultat per a tots els grups de 2*2 caselles.
+L'idea per a implementar aquest algoritme es basa en el concepte de *programació dinàmica*. Diem això ja que per a trobar el resultat final, primer necessitem trobar el resultat de tots els possibles casos anteriors travessant tota la matriu. Afrontem el problema que es planteja (trobar el resultat per a *N * M* caselles), trobant primer el resultat per a tots els grups de 2*2 caselles.
 
 ## Complexitat de l'algoritme
 
 Un cop coneguda l'implementació de l'algoritme de **Needleman-Wunsch**, ja podem parlar de la seva complexitat.
 
-Tal com hem vist, per a realitzar l'alineament es necessita crear una matriu de mida (N + 1) * (M + 1) on N i M representen la llargada de les 2 seqüencies. Seguidament el que fem es recorrer tota la matriu exceptuant la primera fila i la primera columna que es recorren anteriorment.
+Tal com hem vist, per a realitzar l'alineament es necessita crear una matriu de mida (N + 1) * (M + 1) on N i M representen la llargada de les 2 seqüencies. Seguidament el que fem es recorrer tota la matriu exceptuant la primera fila i la primera columna, que ja s'han recorregut anteriorment.
 
 Per tant podem concluir en que la complexitat d'aquest algorisme es **O(N * M)**.
 
@@ -102,15 +115,15 @@ Per tant podem concluir en que la complexitat d'aquest algorisme es **O(N * M)**
 
 	Sembla poc oi? Doncs anem a fer els càlculs per a seqüencies reals:
 
-	Una seqüencia RNA en el pitjor cas pot arribar a tenir una llargada aproximada de 30000 caracters. En el pitjor dels casos (Si comparessim 2 seqüencies d'aquesta llargada), suposaría crear una matriu de 30001 * 30001 cel·les, es a dir, 900060001 cel·les.
+	Una seqüencia RNA pot arribar a tenir una llargada aproximada de 30000 caracters. El pitjor dels casos (Si comparessim 2 seqüencies d'aquesta llargada), suposaría crear una matriu de 30001 * 30001 cel·les, es a dir, 900060001 cel·les.
 
-	Si l'emplenem amb nombres enters de 64 bits, la matriu arribarà a ocupar en memoria **7.2 Gygabytes**!!
+	Si l'emplenem amb nombres enters de 64 bits, la matriu arribarà a ocupar en memoria **7.2 Gygabytes**.
 
-	Ara bé, com hem afrontat nosaltres aquest problema fins el punt de poder arribar a fer multiprocessament per a realitzar més d'una comparació a l'hora?.
+	Ara bé, com hem afrontat nosaltres aquest problema fins el punt de poder arribar a fer multiprocessament per a realitzar més d'una comparació a l'hora?
 
-	Primer de tot ens vam donar compte de que no necessitavem enters de 64 bits. De fet canviant els valors MATCH, MISMATCH i GAP de 1, -1 i -2 respectivament a 0, 1 i 2, podíem deixar d'utilitzar nombres amb signe. I no només això, sino que si les seqüencies poden arribar a tenir fins a 30000 caràcters, la matriu mai arribarà a emmagatzemar nombres que superin a 60000! (En el cas que contessim tot GAPs). Per tant, hem passat d'utilitzar enters de 64 bits a utilitzar nombres sense signe de 16 bits!!
+	Primer de tot ens vam donar compte de que no necessitavem enters de 64 bits. De fet canviant els valors MATCH, MISMATCH i GAP de 1, -1 i -2 respectivament a 0, 1 i 2, podíem deixar d'utilitzar nombres amb signe. I no només això, sino que si les seqüencies poden arribar a tenir fins a 30000 caràcters, la matriu mai arribarà a emmagatzemar nombres que superin a 60000 (En el cas que contessim tot GAPs). Per tant, hem passat d'utilitzar enters de 64 bits a utilitzar nombres sense signe de 16 bits.
 
-	Per tant, si tornem a realitzar els càlculs, en el pitjor dels casos una matriu ocuparà 900060001 * 2 bytes, es a dir, **1,8 Gygabytes!**
+	Si tornem a realitzar els càlculs, en el pitjor dels casos una matriu ocuparà 900060001 * 2 bytes, es a dir, **1,8 Gygabytes**.
 
 + ## Temps d'execució
 
