@@ -51,11 +51,11 @@ Per altra banda, l'objecte CsvTable ens ajuda a tractar amb les dades del fitxer
 
 L'objectiu d'aquesta part del projecte es basa en realitzar el que nosaltres vam interpretar com un filtratge de les dades de la taula csv.
 
-L'algorisme que proposem es prou senzill com per obtenir els resultats iterant un sol cop totes les files. El primer pas es basa en agrupar totes les mostres per països amb un diccionari. La clau d'aquest diccionari es el país a agrupar i el valor es una llista de tuples. Cada tupla conté 2 valors: L'index de la fila a la que correspon la mostra i la mida de la mostra.
+L'algoritme que proposem es prou senzill com per obtenir els resultats iterant un sol cop totes les files. El primer pas es basa en agrupar totes les mostres per països en un diccionari. Aquest diccionari pren la forma següent: ```{"país": Llista de tuples}```. Cada tupla conté 2 valors: L'índex de la fila a la que correspon la mostra i la mida de la mostra.
 
 Un cop hem agrupat les mostres d'aquesta manera, seleccionem la mostra de mida mediana mitjançant l'algorisme *Quick Select* per cada llista de tuples del diccionari de països creat anteriorment.
 
-D'aquesta manera aconseguim agafar el valor medià de cada llista (El qual recordem que es basa en una tupla *(index_fila, mida)* ), i crear una nova llista de diccionaris agafant de la taula original les files corresponents als index de cada tupla.
+D'aquesta manera aconseguim agafar el valor medià de cada llista (El qual recordem que es basa en una tupla *(index_fila, mida)* ), i crear una nova llista de diccionaris agafant de la taula original les files corresponents als índex de cada tupla.
 
 Com que l'objecte CsvTable permet crear una nova instancia a partir d'una llista de diccionaris, podem retornar sense problema un nou objecte CsvTable!
 
@@ -63,12 +63,12 @@ Com que l'objecte CsvTable permet crear una nova instancia a partir d'una llista
 
 ## Complexitat de l'algoritme
 
-Aquest algoritme té un cost O(n^2) en el pitjor dels casos, en el millor té un cost O(n).
+Aquest algoritme té un cost O(n^2) en el pitjor dels casos i O(n) en el millor.
 A que es degut això? Doncs bé, primer de tot recorrem un sol cop totes les mostres per construir el diccionari de països, fins aquí tenim O(n).
 
-Aleshores hem de recórrer cada país del diccionari seleccionant la mostra de mida mitjana amb l'algoritme *Quick Select*, el qual té un cost de O(n^2) en el pitjor dels casos i un cost de O(n) en el millor. 
+Aleshores hem de recórrer cada país del diccionari seleccionant la mostra de mida mitjana amb l'algoritme *Quick Select*, el qual té un cost de O(n^2) en el pitjor dels casos i O(n) en el millor. 
 
-Imaginem que només hi ha un país, per tant el diccionari només té una llista amb totes els mostres, el cost total en el pitjor dels casos quedaria així:
+Imaginem que només hi ha un país i per tant el diccionari només té una llista amb totes les mostres. El cost total en el pitjor dels casos quedaria així:
 ```
 	O(n + n^2) => O(n^2)
 ```
@@ -76,7 +76,7 @@ I en el millor dels casos quedaria:
 ```
 	O(n + n) => O(2n) => O(n)
 ```
-Per molts països que hi hagi, els costos sempre seran iguals, perquè per exemple si tinguéssim 4 països amb les mostres repartides equitativament entre cada país, el cost del pitjor cas seria:
+Per molts països que hi hagi, els costos sempre seran iguals, perquè per exemple si tinguéssim 4 països amb les mostres repartides equitativament entre cada país el cost del pitjor cas seria:
 ```
 	O(n + (n/4)^2 * 4) => O(n + (n^2)/16 * 4) => O(n^2)
 ```
@@ -115,7 +115,7 @@ let min_val = min(min(fit, delete), min(fit, insert));
 matrix[(i + 1, j + 1)] = min_val;
 ```
 
-L'idea per a implementar aquest algoritme es basa en el concepte de *programació dinàmica*. Diem això ja que per a trobar el resultat final, primer necessitem trobar el resultat de tots els possibles casos anteriors travessant tota la matriu. Afrontem el problema que es planteja (trobar el resultat per a *N * M* caselles), trobant primer el resultat per a tots els grups de 2*2 caselles.
+L'idea per a implementar aquest algoritme es basa en el concepte de *programació dinàmica*. Diem això ja que per a trobar el resultat final necessitem primer trobar el resultat de tots els possibles casos anteriors travessant tota la matriu. Afrontem el problema que es planteja (trobar el resultat per a *N * M* caselles), trobant primer el resultat per a tots els grups de 2*2 caselles.
 
 
 
@@ -141,7 +141,7 @@ I perquè diem que aquest algoritme consumeix molta memòria? Doncs bé, tot rec
 
 Si pensem en seqüencies petites de fins a 100 caràcters (Per posar un exemple), la matriu arriba a tenir unes 101 * 101 cel·les, es a dir, 10201 cel·les. 
 
-Anem a seguir amb l'exemple donat. Si a cada casella introduïm un nombre enter de 64 bits (8 bytes), la matriu sencera ocupara en memòria 10201*8 bytes, es a dir, 0.08 MB.
+Si a cada casella introduïm un nombre enter de 64 bits (8 bytes), la matriu sencera ocupara en memòria 10201*8 bytes, es a dir, 0.08 MB.
 
 Sembla poc oi? Doncs anem a fer els càlculs per a seqüencies reals:
 
@@ -157,11 +157,11 @@ Si tornem a realitzar els càlculs, en el pitjor dels casos una matriu ocuparà 
 
 ### Temps d'execució
 
-Gràcies a l'optimització de la gestió de la memòria explicada anteriorment, el temps d'execució s'ha vist reduït en picat.
+Gràcies a l'optimització en la gestió de la memòria explicada anteriorment, el temps d'execució s'ha vist reduït en picat.
 
 Això és deu a la reducció del nombre de dades amb les quals s'ha de treballar al *Heap* (Zona de memòria a la qual suposa un cost elevat accedir en comparació al *Stack*), ja que és on s'emmagatzema cada matriu que es crea.
 
-Actualment treballant amb valors del tipus **u16**, una sola comparació entre 2 mostres mitjançant alineament de seqüencies tarda de mitjana 1.5 segon.
+Actualment treballant amb valors del tipus **u16**, una sola comparació entre 2 mostres mitjançant alineament de seqüencies tarda de mitjana 1.5 segons.
 
 Anteriorment, treballant amb valors del tipus **i16**, una comparació podia arribar a tardar uns 3.5 segons de mitjana, i treballant amb valors del tipus **i64**, en un *PC* amb mínim 8 GB de RAM, podia tardar uns 7 segons.
 
@@ -172,10 +172,10 @@ Anteriorment, treballant amb valors del tipus **i16**, una comparació podia arr
 Per acabar hem decidit classificar les mostres mitjançant una tècnica de **Clustering** anomenada **Hierarchical Clustering**.
 
 El procediment es senzill: 
-+ Comencem tractant cada mostra a avaluar com un únic *Cluster*.
++ Comencem tractant cada mostra a avaluar com un únic *Clúster*.
 + Cerquem les 2 mostres que més s'assemblen (Es troben més a prop).
-+ Ajuntem les 2 mostres seleccionades en un únic *Cluster*.
-+ Repetim el procés fins acabar tenint un sol *Cluster*.
++ Ajuntem les 2 mostres seleccionades en un únic *Clúster*.
++ Repetim el procés fins acabar tenint un sol *Clúster*.
 
 Podem veure el procediment de manera gràfica seguint aquest [link](https://people.revoledu.com/kardi/tutorial/Clustering/Numerical%20Example.htm).
 
@@ -195,7 +195,7 @@ Un cop hem realitzat totes les comparacions busquem repetidament les 2 mostres m
 ```
  O((n*(n - 1))/2) => O(n^2)
 ```
-Per tant, la complexitat final d'aquest algoritme és:
+I la complexitat final d'aquest algoritme és:
 ```
  O(n^2 + n^2) => O(n^2)
 ```
@@ -204,11 +204,11 @@ Per tant, la complexitat final d'aquest algoritme és:
 
 ## Anàlisi experimental
 
-Degut a les optimitzacions que comentem en l'apartat anterior pel que fa a la memòria que ocupa una comparació, hem volgut experimentar realitzant multi-processament i el resultat es simplement espectacular.
+Degut a les optimitzacions que hem comentat fins ara pel que fa a la memòria que ocupa una comparació, hem volgut experimentar realitzant multi-processament i el resultat ha sigut sorprenent.
 
 Si una sola comparació tarda de mitjana 1.5 segons, processar 946 comparacions tarda al voltant de 1400 segons. Ara bé, i si realitzem més d'una comparació a l'hora?
 
-Mitjançant el poder de la llibreria **Rayon** de *Rust* hem implementat d'una manera molt senzilla un sistema concurrent per a realitzar més d'una comparació a l'hora. *Rayon* ens ofereix mètodes com *par_iter* el qual ens retorna un iterable que dividirà les tasques a executar en diferents *threads*, i sobre aquest podem utilitzar qualsevol funció que utilitzaríem sobre un iterable comú.
+Gràcies a la llibreria **Rayon** de *Rust*, hem implementat d'una manera molt senzilla una funció concurrent per a realitzar més d'una comparació a l'hora. *Rayon* ens ofereix mètodes com *par_iter* el qual ens retorna un iterable que dividirà les tasques a executar en diferents *threads*, i sobre aquest podem utilitzar qualsevol funció que utilitzaríem sobre un iterable comú.
 
 El codi implementat s'assembla al següent:
 
@@ -220,9 +220,9 @@ v.par_iter().map(|s1, s2| {
 
 Som conscients que no podem utilitzar aquest mètode per a qualsevol *PC* ja que es pot produir un error en quant a espai disponible en memòria.
 
-Per a solucionar aquesta problemàtica, comprovem la memòria disponible del sistema gràcies a la llibreria *psutils* i, havent calculat prèviament l'espai màxim que pot ocupar realitzar una comparació, calculem el nombre de *threads* màxims que s'haurien d'utilitzar. Per seguretat hem assignat el valor màxim de *threads* a 4 degut a que ja ens dona uns resultats extraordinàriament bons.
+Per a solucionar aquesta problemàtica, comprovem la memòria disponible del sistema gràcies a la llibreria *psutils* i, havent calculat prèviament l'espai màxim que pot ocupar una comparació, calculem el nombre de *threads* màxims que s'haurien d'utilitzar. Per seguretat hem assignat el valor màxim de *threads* a 4 degut a que ja ens dona uns resultats prou bons.
 
-Nosaltres hem pogut testejar el rendiment d'aquesta millora amb un *PC* de fins a 6 *threads* i els resultats han sigut els següents:
+Personalment hem pogut testejar el rendiment d'aquesta millora en un *PC* de fins a 6 *threads* i els resultats han sigut els següents:
 
 	+ 1 THREADS: 1400 segons aprox.
 	+ 2 THREADS: 693 segons aprox.
