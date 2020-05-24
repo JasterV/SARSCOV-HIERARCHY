@@ -8,7 +8,7 @@
 
 #### *Enginyeria informàtica*
 #### *Víctor Martínez Montané --- 78100640T*
-#### *Francisco Manuel Martin Rubio*
+#### *Francisco Manuel Martin Rubio --- 48057095K *
 
 
 
