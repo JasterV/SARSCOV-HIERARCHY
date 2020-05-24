@@ -21,9 +21,7 @@ We provide you a .zip file with 2 other fasta and csv files to try out without d
 
 
 ```
-cd src/main
-  
-python3 sarscovhierarchy.py <data_path>
+python src/main/sarscovhierarchy.py <data_path>
 ```
 
 ### Full Code Documentation
