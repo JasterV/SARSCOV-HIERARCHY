@@ -1,5 +1,6 @@
 import os
 import signal
+import zipfile
 from os.path import join
 from sys import argv
 
@@ -13,18 +14,21 @@ signal.signal(signal.SIGTSTP, signal.SIG_IGN)
 
 def main():
     data_dir = argv[1]
-    csv_path = join(data_dir, "sequences.csv")
-    fasta_path = join(data_dir, "sequences.fasta")
-    print("\nReading and processing files...")
-    csv_table = CsvTable(csv_path).group_countries_by_median_length()
-    ids = csv_table.values('Accession')
-    fasta_map = FastaMap(fasta_path).filter(lambda item: item[0] in ids)
-    print("Files processing finished!")
-    labels = csv_table.dict_of('Accession', 'Geo_Location')
-    print("\nBuilding hierarchy...")
-    distances_table = fasta_map.compare_all_samples()
-    tree = HierarchyTree(distances_table, labels)
-    tree.build_tree()
+    data_ex = "data.zip"
+    with zipfile.ZipFile(data_ex,'r') as zip_ref:
+        zip_ref.extractall(data_fol:=join(data_dir,"/data/"))
+        csv_path = join(data_fol, "sequences.csv")
+        fasta_path = join(data_fol, "sequences.fasta")
+        print("\nReading and processing files...")
+        csv_table = CsvTable(csv_path).group_countries_by_median_length()
+        ids = csv_table.values('Accession')
+        fasta_map = FastaMap(fasta_path).filter(lambda item: item[0] in ids)
+        print("Files processing finished!")
+        labels = csv_table.dict_of('Accession', 'Geo_Location')
+        print("\nBuilding hierarchy...")
+        distances_table = fasta_map.compare_all_samples()
+        tree = HierarchyTree(distances_table, labels)
+        tree.build_tree()
 
 
 if __name__ == '__main__':
