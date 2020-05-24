@@ -8,7 +8,7 @@
 
 #### *Enginyeria informàtica*
 #### *Víctor Martínez Montané --- 78100640T*
-#### *Francisco Manuel Martin Rubio --- 48057095K *
+#### *Francisco Manuel Martin Rubio --- 48057095K*
 
 
 
@@ -106,13 +106,13 @@ L'objectiu final es basa en calcular la distancia entre 2 seqüencies. Per acons
 
 	Introdueix en cada casella el valor òptim a col·locar a partir dels anteriors de la següent manera:
 ``` Rust
-	// c1 i c2 son els simbols a comparar
-	// check_match retorna 0 si c1 i c2 són iguals o 1 si son diferents
-	let fit = matrix[(i, j)] + check_match(c1, c2);
-    let delete = matrix[(i, j + 1)] + GAP;
-    let insert = matrix[(i + 1, j)] + GAP;
-	let min_val = min(min(fit, delete), min(fit, insert));
-	matrix[(i + 1, j + 1)] = min_val;
+// c1 i c2 son els simbols a comparar
+// check_match retorna 0 si c1 i c2 són iguals o 1 si son diferents
+let fit = matrix[(i, j)] + check_match(c1, c2);
+let delete = matrix[(i, j + 1)] + GAP;
+let insert = matrix[(i + 1, j)] + GAP;
+let min_val = min(min(fit, delete), min(fit, insert));
+matrix[(i + 1, j + 1)] = min_val;
 ```
 
 L'idea per a implementar aquest algoritme es basa en el concepte de *programació dinàmica*. Diem això ja que per a trobar el resultat final, primer necessitem trobar el resultat de tots els possibles casos anteriors travessant tota la matriu. Afrontem el problema que es planteja (trobar el resultat per a *N * M* caselles), trobant primer el resultat per a tots els grups de 2*2 caselles.
