@@ -15,7 +15,7 @@ pip install -r requeriments.txt 📝
 
 ### ✨ Execute
 
-You must install the sequences.fasta and sequences.csv files rom the [NCBI official database](https://www.ncbi.nlm.nih.gov/labs/virus/vssi/#/virus?VirusLineage_ss=Severe%20acute%20respiratory%20syndrome%20coronavirus%202%20(SARS-CoV-2),%20taxid:2697049&SeqType_s=Nucleotide) to execute this project.
+You must install the sequences.fasta and sequences.csv files from the [NCBI official database](https://www.ncbi.nlm.nih.gov/labs/virus/vssi/#/virus?VirusLineage_ss=Severe%20acute%20respiratory%20syndrome%20coronavirus%202%20(SARS-CoV-2),%20taxid:2697049&SeqType_s=Nucleotide) to execute this project.
 
 We provide you a .zip file with 2 other fasta and csv files to try out without downloading anything so, have fun!
 
