@@ -53,7 +53,7 @@ pub fn par_compare(v: Vec<(&str, &str)>, map: HashMap<&str, &str>, num_threads: 
 }
 
 /// Performs global sequence alignment of two `&str` using the Needleman-Wunsch classic algorithm.
-/// The returning value is the distances between the 2 samples, computed considering a MATCH a value
+/// Returns the distances between the 2 samples, computed considering a MATCH a value
 /// of distance 0, a GAP distance of 2 and a MISMATCH distance of 1.
 /// 
 /// # Examples
